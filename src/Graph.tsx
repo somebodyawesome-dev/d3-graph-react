@@ -1,34 +1,22 @@
-import {
-  RefObject,
-  createRef,
-  forwardRef,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
-import { drag as d3Drag } from "d3-drag";
-import {
-  ForceLink,
-  SimulationLinkDatum,
-  forceLink,
-  forceCenter,
-  forceManyBody,
-  forceSimulation,
-} from "d3-force";
-import { select as d3Select, selectAll as d3SelectAll } from "d3-selection";
-import { zoom as d3Zoom } from "d3-zoom";
-import { isEmpty } from "lodash-es";
+import React, { RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
+import { drag as d3Drag } from 'd3-drag';
+import { ForceLink, SimulationLinkDatum, forceLink, forceCenter, forceManyBody, forceSimulation } from 'd3-force';
+import { select as d3Select, selectAll as d3SelectAll } from 'd3-selection';
+import { zoom as d3Zoom } from 'd3-zoom';
+import { isEmpty } from 'lodash-es';
 
 // component inputs
 export type GraphProps = {
   nodes: { title: string; isTopic: boolean }[];
   links: { from: number; to: number }[];
 };
+
+export type Node = {};
+export type Link = { source: number; target: number };
 // node type in the simulation
 type NodeType = {
   index: number;
-  id: string;
+  id: string | number;
   x: number;
   y: number;
   vx: number;
@@ -48,7 +36,15 @@ const DEFAULT_REPULSION_FORCE = -200;
 const DEFAULT_CENTER_FORCE = 1;
 const DEFAULT_CENTER_X = 400;
 const DEFAULT_CENTER_Y = 400;
-export function Graph({ graph }: { graph: GraphProps }) {
+export type GraphType<N extends Node, L extends Link> = {
+  graph: {
+    nodes: N[];
+    links: L[];
+  };
+  // NodeComponent?: (node: N) => React.JSX.Element;
+  NodeComponent?: React.FC<{ node: N }>;
+};
+export function Graph<N extends Node, L extends Link>({ graph, NodeComponent }: GraphType<N, L>) {
   const { nodes, links } = graph;
   const [, forceUpdate] = useReducer((x) => !x, false);
   // init simulation
@@ -57,26 +53,21 @@ export function Graph({ graph }: { graph: GraphProps }) {
   const { current: simulation } = useRef(
     forceSimulation()
       // repulsion force
-      .force("charge", forceManyBody().strength(DEFAULT_REPULSION_FORCE))
+      .force('charge', forceManyBody().strength(DEFAULT_REPULSION_FORCE))
       // link force
       .force(
-        "link",
+        'link',
         forceLink<NodeType, LinkType>()
           .id((d) => d.index)
           .strength(DEFAULT_LINK_FORCE_STRENGTH)
           .distance(DEFAULT_LINK_LENGTH)
-          .links([])
+          .links([]),
       )
       // gravity force
-      .force(
-        "center",
-        forceCenter(DEFAULT_CENTER_X, DEFAULT_CENTER_Y).strength(DEFAULT_CENTER_FORCE)
-      )
+      .force('center', forceCenter(DEFAULT_CENTER_X, DEFAULT_CENTER_Y).strength(DEFAULT_CENTER_FORCE)),
   );
   const [simulationNodes, setSimulationNodes] = useState<NodeType[]>([]);
-  const [simulationLinks, setSimulationLinks] = useState<SimulationLinkDatum<NodeType>[]>(
-    []
-  );
+  const [simulationLinks, setSimulationLinks] = useState<SimulationLinkDatum<NodeType>[]>([]);
   // create array of reference  to hold nodes references
   const refHolder = useRef(nodes.map((_) => createRef<HTMLDivElement>()));
   const { current: nodeRefs } = refHolder;
@@ -86,26 +77,23 @@ export function Graph({ graph }: { graph: GraphProps }) {
     // onZoom change scale of all elements
     const onZoom = (d3Event: any) => {
       const transform = d3Event.transform;
-      d3SelectAll(`#microservice-workflow`)
-        .select<SVGElement>("svg")
-        .select("g")
-        .attr("transform", transform);
+      d3SelectAll(`#microservice-workflow`).select<SVGElement>('svg').select('g').attr('transform', transform);
     };
-    const selector = d3Select("#microservice-workflow").select<SVGElement>("svg");
+    const selector = d3Select('#microservice-workflow').select<SVGElement>('svg');
     const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent([0.5, 8]);
-    zoomObject.on("zoom", onZoom);
+    zoomObject.on('zoom', onZoom);
     zoomObject.scaleTo(selector, 1);
     // avoid double click on graph to trigger zoom
     // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
-    selector.call(zoomObject).on("dblclick.zoom", null);
+    selector.call(zoomObject).on('dblclick.zoom', null);
   };
   // init drag events
   const graphNodeDragConfig = () => {
     const customNodeDrag = d3Drag<SVGGElement, NodeType>()
-      .on("start", (ev) => {
+      .on('start', (ev) => {
         if (!ev.active) simulation.alphaTarget(0.3).restart();
       })
-      .on("drag", (ev, d) => {
+      .on('drag', (ev, d) => {
         const draggedNode = simulationNodes[d.index];
         const { x, y } = ev;
         draggedNode.x = x; // x - subject.x;
@@ -114,7 +102,7 @@ export function Graph({ graph }: { graph: GraphProps }) {
         draggedNode.fy = draggedNode.y;
         setSimulationNodes([...simulationNodes]);
       })
-      .on("end", (ev, d) => {
+      .on('end', (ev, d) => {
         if (!ev.active) simulation.alphaTarget(0);
         const draggedNode = simulationNodes[d.index];
         draggedNode.fx = undefined;
@@ -122,9 +110,9 @@ export function Graph({ graph }: { graph: GraphProps }) {
         setSimulationNodes([...simulationNodes]);
       });
 
-    d3Select("#microservice-workflow")
-      .select<SVGElement>("svg")
-      .selectAll<SVGGElement, NodeType>(".node")
+    d3Select('#microservice-workflow')
+      .select<SVGElement>('svg')
+      .selectAll<SVGGElement, NodeType>('.node')
       .data(simulationNodes)
       .call(customNodeDrag);
   };
@@ -138,14 +126,14 @@ export function Graph({ graph }: { graph: GraphProps }) {
     // give nodes different coordination to prevent explosion
     setSimulationNodes(
       nodes.map((val, index) => {
-        return { index, id: val.title, x: index * 5, y: index * 0, vx: 0, vy: 0 };
-      })
+        return { index, id: index, x: index * 5, y: index * 0, vx: 0, vy: 0 };
+      }),
     );
     // map inputs to simulation links
     setSimulationLinks(
       links.map((val) => {
-        return { source: val.from, target: val.to };
-      })
+        return { ...val };
+      }),
     );
 
     refHolder.current = nodes.map((_) => createRef<HTMLDivElement>());
@@ -155,7 +143,7 @@ export function Graph({ graph }: { graph: GraphProps }) {
     graphNodeDragConfig();
     simulation
       .nodes(simulationNodes)
-      .on("tick", () => {
+      .on('tick', () => {
         // force re render of component because d3.js is not suited for react
         // and interanlly d3.js is changing states value every tick
         forceUpdate();
@@ -164,9 +152,7 @@ export function Graph({ graph }: { graph: GraphProps }) {
   }, [simulationNodes]);
   useEffect(() => {
     // update link force according to simulationLinks updates
-    (
-      simulation.force("link") as ForceLink<NodeType, SimulationLinkDatum<NodeType>>
-    ).links(simulationLinks);
+    (simulation.force('link') as ForceLink<NodeType, SimulationLinkDatum<NodeType>>).links(simulationLinks);
   }, [simulationLinks]);
 
   return (
@@ -178,7 +164,7 @@ export function Graph({ graph }: { graph: GraphProps }) {
             viewBox="-0 -5 10 10"
             refX={DEFAULT_LINK_LENGTH / 2 - 15}
             refY={0}
-            orient={"auto"}
+            orient={'auto'}
             markerWidth={13}
             markerHeight={13}
           >
@@ -204,12 +190,19 @@ export function Graph({ graph }: { graph: GraphProps }) {
             );
           })}
           {simulationNodes.map((val, index) => {
+            // TODO: add custom component
             const node = nodes[val.index];
-            return node.isTopic ? (
-              <TopicNode title={node.title} ref={nodeRefs[index]} key={index} {...val} />
+
+            return NodeComponent ? (
+              <NodeComponent node={node} />
             ) : (
-              <MsNode title={node.title} ref={nodeRefs[index]} key={index} {...val} />
+              <TopicNode title={'awesome title'} ref={nodeRefs[index]} key={index} {...val} />
             );
+            // return node.isTopic ? (
+            //   <TopicNode title={node.title} ref={nodeRefs[index]} key={index} {...val} />
+            // ) : (
+            //   <MsNode title={node.title} ref={nodeRefs[index]} key={index} {...val} />
+            // );
           })}
         </g>
       </svg>
@@ -227,57 +220,46 @@ const Path = ({
   targetNode: NodeType;
   targetNodeRef: RefObject<HTMLDivElement>;
 }) => {
-  if (
-    isEmpty(sourceNode) ||
-    isEmpty(targetNode) ||
-    isEmpty(sourceNodeRef.current) ||
-    isEmpty(targetNodeRef.current)
-  )
+  if (isEmpty(sourceNode) || isEmpty(targetNode) || isEmpty(sourceNodeRef.current) || isEmpty(targetNodeRef.current))
     return null;
-  const { offsetWidth: sourceOffsetWidth, offsetHeight: sourceOffsetHeight } =
-    sourceNodeRef.current;
-  const { offsetWidth: targetOffsetWidth, offsetHeight: targetOffsetHeight } =
-    targetNodeRef.current;
+  const { offsetWidth: sourceOffsetWidth, offsetHeight: sourceOffsetHeight } = sourceNodeRef.current;
+  const { offsetWidth: targetOffsetWidth, offsetHeight: targetOffsetHeight } = targetNodeRef.current;
   return (
     <path
       className="link"
       fill="none"
       markerEnd="url(#arrowhead)"
       // @ts-ignore
-      d={`M ${sourceNode.x + sourceOffsetWidth / 2},${
-        sourceNode.y + sourceOffsetHeight / 2
-      } L ${targetNode.x + targetOffsetWidth / 2} ${
+      d={`M ${sourceNode.x + sourceOffsetWidth / 2},${sourceNode.y + sourceOffsetHeight / 2} L ${
+        targetNode.x + targetOffsetWidth / 2
+      } ${
         // @ts-ignore
         targetNode.y + targetOffsetHeight / 2
       }`}
       // strokeLinecap="butt"
-      stroke={"gray"}
+      stroke={'gray'}
       strokeWidth={1}
     ></path>
   );
 };
-const MsNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(
-  ({ x, y, title }, ref) => {
-    return (
-      <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
-        <foreignObject x="0" y="0" className="w-1 h-1 overflow-visible">
-          <MicroserviceCard ref={ref} name={title} />
-        </foreignObject>
-      </g>
-    );
-  }
-);
-const TopicNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(
-  ({ x, y, title }, ref) => {
-    return (
-      <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
-        <foreignObject x="0" y="0" className="w-1 h-1 overflow-visible">
-          <Topic ref={ref} name={title} />
-        </foreignObject>
-      </g>
-    );
-  }
-);
+const MsNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(({ x, y, title }, ref) => {
+  return (
+    <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
+      <foreignObject x="0" y="0" className="w-1 h-1 overflow-visible">
+        <MicroserviceCard ref={ref} name={title} />
+      </foreignObject>
+    </g>
+  );
+});
+const TopicNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(({ x, y, title }, ref) => {
+  return (
+    <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
+      <foreignObject x="0" y="0" className="w-1 h-1 overflow-visible">
+        <Topic ref={ref} name={title} />
+      </foreignObject>
+    </g>
+  );
+});
 const Topic = forwardRef<HTMLDivElement, { name: string }>((params, ref) => {
   const { name } = params;
   return (
@@ -315,17 +297,9 @@ const MicroserviceCard = forwardRef<HTMLDivElement, { name: string }>((params, r
     </div>
   );
 });
-const Text = ({
-  title,
-  value,
-  inSameLine,
-}: {
-  title: string;
-  value: string;
-  inSameLine?: boolean;
-}) => {
+const Text = ({ title, value, inSameLine }: { title: string; value: string; inSameLine?: boolean }) => {
   return (
-    <div className={`flex ${!inSameLine ? "flex-row" : "flex-col"}  gap-0 relative`}>
+    <div className={`flex ${!inSameLine ? 'flex-row' : 'flex-col'}  gap-0 relative`}>
       <h4 className=" absolute -top-4 text-xs font-medium text-[#FF7900]">{title}</h4>
       <h1 className="font-bold text-base">{value}</h1>
     </div>
