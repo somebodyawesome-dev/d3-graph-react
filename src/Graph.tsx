@@ -43,8 +43,9 @@ export type GraphType<N extends Node, L extends Link> = {
   };
   // NodeComponent?: (node: N) => React.JSX.Element;
   NodeComponent?: React.FC<{ node: N }>;
+  LinkComponent?: React.FC<{ link: L }>;
 };
-export function Graph<N extends Node, L extends Link>({ graph, NodeComponent }: GraphType<N, L>) {
+export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, NodeComponent }: GraphType<N, L>) {
   const { nodes, links } = graph;
   const [, forceUpdate] = useReducer((x) => !x, false);
   // init simulation
@@ -173,13 +174,16 @@ export function Graph<N extends Node, L extends Link>({ graph, NodeComponent }: 
         </defs>
         <g>
           {simulationLinks.map((val, index) => {
+            const link = links[index];
             const sourceNode = val.source as NodeType;
             const targetNode = val.target as NodeType;
 
             const sourceNodeRef = nodeRefs[sourceNode.index];
             const targetNodeRef = nodeRefs[targetNode.index];
 
-            return (
+            return LinkComponent ? (
+              <LinkComponent link={link} key={`link-${index}`} />
+            ) : (
               <Path
                 key={`links-${index}`}
                 sourceNode={sourceNode}
@@ -194,9 +198,9 @@ export function Graph<N extends Node, L extends Link>({ graph, NodeComponent }: 
             const node = nodes[val.index];
 
             return NodeComponent ? (
-              <NodeComponent node={node} />
+              <NodeComponent key={`node-${index}`} node={node} />
             ) : (
-              <TopicNode title={'awesome title'} ref={nodeRefs[index]} key={index} {...val} />
+              <TopicNode title={'awesome title'} ref={nodeRefs[index]} key={`node-${index}`} {...val} />
             );
             // return node.isTopic ? (
             //   <TopicNode title={node.title} ref={nodeRefs[index]} key={index} {...val} />
