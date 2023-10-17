@@ -11,7 +11,7 @@ export type GraphProps = {
   links: { from: number; to: number }[];
 };
 
-export type Node = {};
+export type Node = { id: string | number };
 export type Link = { source: number; target: number };
 // node type in the simulation
 type NodeType = {
@@ -126,7 +126,7 @@ export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, No
     // map inputs to simulation nodes
     // give nodes different coordination to prevent explosion
     setSimulationNodes(
-      nodes.map((val, index) => {
+      nodes.map((_, index) => {
         return { index, id: index, x: index * 5, y: index * 0, vx: 0, vy: 0 };
       }),
     );
@@ -157,7 +157,7 @@ export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, No
   }, [simulationLinks]);
 
   return (
-    <div id="microservice-workflow" className="">
+    <div id="microservice-workflow" className="w-screen h-screen">
       <svg className="w-full h-[80vh] ">
         <defs>
           <marker
@@ -246,15 +246,15 @@ const Path = ({
     ></path>
   );
 };
-const MsNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(({ x, y, title }, ref) => {
-  return (
-    <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
-      <foreignObject x="0" y="0" className="w-1 h-1 overflow-visible">
-        <MicroserviceCard ref={ref} name={title} />
-      </foreignObject>
-    </g>
-  );
-});
+// const _MsNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(({ x, y, title }, ref) => {
+//   return (
+//     <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
+//       <foreignObject x="0" y="0" className="w-1 h-1 overflow-visible">
+//         <MicroserviceCard ref={ref} name={title} />
+//       </foreignObject>
+//     </g>
+//   );
+// });
 const TopicNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(({ x, y, title }, ref) => {
   return (
     <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
@@ -275,37 +275,37 @@ const Topic = forwardRef<HTMLDivElement, { name: string }>((params, ref) => {
     </div>
   );
 });
-const MicroserviceCard = forwardRef<HTMLDivElement, { name: string }>((params, ref) => {
-  const { name } = params;
-  return (
-    <div
-      ref={ref}
-      className="bg-white relative overflow-hidden border border-solid border-gray-400 w-[170px] max-w-[180px]  py-3 flex flex-col justify-center items-center gap-3 hover:scale-[101%] transition-all"
-    >
-      <span className="animate-animateTop absolute top-0 left-0 w-full h-[3px] bg-gradient-to-l from-[#FFFFFF] to-[#26d926] "></span>
-      <span className="animate-animateRight absolute top-0 right-0 h-full w-[3px] bg-gradient-to-t from-[#FFFFFF] to-[#26d926] "></span>
-      <span className="animate-animateBottom absolute bottom-0 left-0 h-[3px] w-full bg-gradient-to-r from-[#FFFFFF] to-[#26d926] "></span>
-      <span className="animate-animateLeft absolute top-0 left-0 h-full w-[3px] bg-gradient-to-b from-[#FFFFFF] to-[#26d926] "></span>
-      <div className="w-full flex flex-col gap-1  p-2">
-        <Text title="Microservice Name" value={name} />
-      </div>
+// const MicroserviceCard = forwardRef<HTMLDivElement, { name: string }>((params, ref) => {
+//   const { name } = params;
+//   return (
+//     <div
+//       ref={ref}
+//       className="bg-white relative overflow-hidden border border-solid border-gray-400 w-[170px] max-w-[180px]  py-3 flex flex-col justify-center items-center gap-3 hover:scale-[101%] transition-all"
+//     >
+//       <span className="animate-animateTop absolute top-0 left-0 w-full h-[3px] bg-gradient-to-l from-[#FFFFFF] to-[#26d926] "></span>
+//       <span className="animate-animateRight absolute top-0 right-0 h-full w-[3px] bg-gradient-to-t from-[#FFFFFF] to-[#26d926] "></span>
+//       <span className="animate-animateBottom absolute bottom-0 left-0 h-[3px] w-full bg-gradient-to-r from-[#FFFFFF] to-[#26d926] "></span>
+//       <span className="animate-animateLeft absolute top-0 left-0 h-full w-[3px] bg-gradient-to-b from-[#FFFFFF] to-[#26d926] "></span>
+//       <div className="w-full flex flex-col gap-1  p-2">
+//         <Text title="Microservice Name" value={name} />
+//       </div>
 
-      {/* <div className="relative rounded-full">
-          <div className="overflow-hidden p-2 group transition-all bg-transparent border-2 border-[#FF7900] hover:border-[#FF7900]  rounded flex justify-center items-center cursor-pointer after:absolute after:-z-20 after:content-[''] after:h-full after:inset-0 after:bg-[#FF7900] after:transition-all after:w-0 after:hover:w-full after:rounded">
-         
-            <span className="font-bold text-[#FF7900] group-hover:text-black">
-              More infos
-            </span>
-          </div>
-        </div> */}
-    </div>
-  );
-});
-const Text = ({ title, value, inSameLine }: { title: string; value: string; inSameLine?: boolean }) => {
-  return (
-    <div className={`flex ${!inSameLine ? 'flex-row' : 'flex-col'}  gap-0 relative`}>
-      <h4 className=" absolute -top-4 text-xs font-medium text-[#FF7900]">{title}</h4>
-      <h1 className="font-bold text-base">{value}</h1>
-    </div>
-  );
-};
+//       {/* <div className="relative rounded-full">
+//           <div className="overflow-hidden p-2 group transition-all bg-transparent border-2 border-[#FF7900] hover:border-[#FF7900]  rounded flex justify-center items-center cursor-pointer after:absolute after:-z-20 after:content-[''] after:h-full after:inset-0 after:bg-[#FF7900] after:transition-all after:w-0 after:hover:w-full after:rounded">
+
+//             <span className="font-bold text-[#FF7900] group-hover:text-black">
+//               More infos
+//             </span>
+//           </div>
+//         </div> */}
+//     </div>
+//   );
+// });
+// const Text = ({ title, value, inSameLine }: { title: string; value: string; inSameLine?: boolean }) => {
+//   return (
+//     <div className={`flex ${!inSameLine ? 'flex-row' : 'flex-col'}  gap-0 relative`}>
+//       <h4 className=" absolute -top-4 text-xs font-medium text-[#FF7900]">{title}</h4>
+//       <h1 className="font-bold text-base">{value}</h1>
+//     </div>
+//   );
+// };
