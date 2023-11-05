@@ -157,7 +157,7 @@ export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, No
   }, [simulationLinks]);
 
   return (
-    <div id="microservice-workflow" className="w-screen h-screen">
+    <div id="microservice-workflow" className="w-full h-full m-12">
       <svg className="w-full h-[80vh] ">
         <defs>
           <marker
