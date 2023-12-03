@@ -1,9 +1,9 @@
-import React, { RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
 import { drag as d3Drag } from 'd3-drag';
-import { ForceLink, SimulationLinkDatum, forceLink, forceCenter, forceManyBody, forceSimulation } from 'd3-force';
+import { ForceLink, SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
 import { select as d3Select, selectAll as d3SelectAll } from 'd3-selection';
 import { zoom as d3Zoom } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
+import React, { RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
 
 // component inputs
 export type GraphProps = {
@@ -33,7 +33,7 @@ type LinkType = {
 const DEFAULT_LINK_LENGTH = 200;
 const DEFAULT_LINK_FORCE_STRENGTH = 1;
 const DEFAULT_REPULSION_FORCE = -200;
-const DEFAULT_CENTER_FORCE = 1;
+const DEFAULT_CENTER_FORCE = 0.05;
 const DEFAULT_CENTER_X = 400;
 const DEFAULT_CENTER_Y = 400;
 export type GraphType<N extends Node, L extends Link> = {
@@ -51,7 +51,7 @@ export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, No
   // init simulation
   // use refrence to prevents re assignment to simulation
   // dont change to state because simulation is constant
-  const { current: simulation } = useRef(
+  const [simulation] = useState(
     forceSimulation()
       // repulsion force
       .force('charge', forceManyBody().strength(DEFAULT_REPULSION_FORCE))
@@ -78,9 +78,9 @@ export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, No
     // onZoom change scale of all elements
     const onZoom = (d3Event: any) => {
       const transform = d3Event.transform;
-      d3SelectAll(`#microservice-workflow`).select<SVGElement>('svg').select('g').attr('transform', transform);
+      d3SelectAll(`#container`).select<SVGElement>('svg').select('g').attr('transform', transform);
     };
-    const selector = d3Select('#microservice-workflow').select<SVGElement>('svg');
+    const selector = d3Select('#container').select<SVGElement>('svg');
     const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent([0.5, 8]);
     zoomObject.on('zoom', onZoom);
     zoomObject.scaleTo(selector, 1);
@@ -111,7 +111,7 @@ export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, No
         setSimulationNodes([...simulationNodes]);
       });
 
-    d3Select('#microservice-workflow')
+    d3Select('#container')
       .select<SVGElement>('svg')
       .selectAll<SVGGElement, NodeType>('.node')
       .data(simulationNodes)
@@ -157,8 +157,8 @@ export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, No
   }, [simulationLinks]);
 
   return (
-    <div id="microservice-workflow" className="w-full h-full m-12">
-      <svg className="w-full h-[80vh] ">
+    <div id="container" className="w-full h-full">
+      <svg className="w-full h-full">
         <defs>
           <marker
             id="arrowhead"
