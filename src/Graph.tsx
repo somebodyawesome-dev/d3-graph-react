@@ -44,8 +44,14 @@ export type GraphType<N extends Node, L extends Link> = {
   // NodeComponent?: (node: N) => React.JSX.Element;
   NodeComponent?: React.FC<{ node: N }>;
   LinkComponent?: React.FC<{ link: L }>;
+  zoomScale?: [number, number];
 };
-export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, NodeComponent }: GraphType<N, L>) {
+export function Graph<N extends Node, L extends Link>({
+  graph,
+  LinkComponent,
+  NodeComponent,
+  zoomScale = [0.5, 8],
+}: GraphType<N, L>) {
   const { nodes, links } = graph;
   const [, forceUpdate] = useReducer((x) => !x, false);
   // init simulation
@@ -81,7 +87,7 @@ export function Graph<N extends Node, L extends Link>({ graph, LinkComponent, No
       d3SelectAll(`#container`).select<SVGElement>('svg').select('g').attr('transform', transform);
     };
     const selector = d3Select('#container').select<SVGElement>('svg');
-    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent([0.5, 8]);
+    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
     zoomObject.on('zoom', onZoom);
     zoomObject.scaleTo(selector, 1);
     // avoid double click on graph to trigger zoom
