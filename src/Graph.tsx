@@ -45,12 +45,14 @@ export type GraphType<N extends Node, L extends Link> = {
   NodeComponent?: React.FC<{ node: N }>;
   LinkComponent?: React.FC<{ link: L }>;
   zoomScale?: [number, number];
+  linkForce?: { strength: number; length: number };
 };
 export function Graph<N extends Node, L extends Link>({
   graph,
   LinkComponent,
   NodeComponent,
   zoomScale = [0.5, 8],
+  linkForce,
 }: GraphType<N, L>) {
   const { nodes, links } = graph;
   const [, forceUpdate] = useReducer((x) => !x, false);
@@ -61,15 +63,7 @@ export function Graph<N extends Node, L extends Link>({
     forceSimulation()
       // repulsion force
       .force('charge', forceManyBody().strength(DEFAULT_REPULSION_FORCE))
-      // link force
-      .force(
-        'link',
-        forceLink<NodeType, LinkType>()
-          .id((d) => d.index)
-          .strength(DEFAULT_LINK_FORCE_STRENGTH)
-          .distance(DEFAULT_LINK_LENGTH)
-          .links([]),
-      )
+
       // gravity force
       .force('center', forceCenter(DEFAULT_CENTER_X, DEFAULT_CENTER_Y).strength(DEFAULT_CENTER_FORCE)),
   );
@@ -161,7 +155,19 @@ export function Graph<N extends Node, L extends Link>({
     // update link force according to simulationLinks updates
     (simulation.force('link') as ForceLink<NodeType, SimulationLinkDatum<NodeType>>).links(simulationLinks);
   }, [simulationLinks]);
-
+  useEffect(() => {
+    if (!linkForce) {
+      simulation.force('link', null);
+      return;
+    }
+    simulation.force(
+      'link',
+      forceLink<NodeType, LinkType>()
+        .id((d) => d.index)
+        .strength(linkForce.strength)
+        .distance(linkForce.length),
+    );
+  }, [linkForce]);
   return (
     <div id="container" className="w-full h-full">
       <svg className="w-full h-full">
