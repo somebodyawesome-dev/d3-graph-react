@@ -31,7 +31,7 @@ type NodeType = {
 // };
 
 const DEFAULT_LINK_LENGTH = 200;
-const DEFAULT_REPULSION_FORCE = -200;
+// const DEFAULT_REPULSION_FORCE = -200;
 // const DEFAULT_CENTER_FORCE = 0.05;
 // const DEFAULT_CENTER_X = 400;
 // const DEFAULT_CENTER_Y = 400;
@@ -48,7 +48,8 @@ export type GraphType<N extends Node, L extends Link> = {
   LinkComponent?: React.FC<{ link: L }>;
   zoomScale?: [number, number];
   linkForce?: { strength: number; length: number };
-  gravityForce?: { force: number; center_x: number; center_y: number };
+  gravityForce?: { strength: number; center_x: number; center_y: number };
+  chargeForce?: { strength: number };
 };
 export function Graph<N extends Node, L extends Link>({
   graph,
@@ -57,17 +58,14 @@ export function Graph<N extends Node, L extends Link>({
   zoomScale = DEFAULT_ZOOM_SCALE,
   linkForce,
   gravityForce,
+  chargeForce,
 }: GraphType<N, L>) {
   const { nodes, links } = graph;
   const [, forceUpdate] = useReducer((x) => !x, false);
   // init simulation
   // use refrence to prevents re assignment to simulation
   // dont change to state because simulation is constant
-  const [simulation] = useState(
-    forceSimulation()
-      // repulsion force
-      .force('charge', forceManyBody().strength(DEFAULT_REPULSION_FORCE)),
-  );
+  const [simulation] = useState(forceSimulation());
   const [simulationNodes, setSimulationNodes] = useState<NodeType[]>([]);
   const [simulationLinks, setSimulationLinks] = useState<SimulationLinkDatum<NodeType>[]>([]);
   // create array of reference  to hold nodes references
@@ -105,12 +103,46 @@ export function Graph<N extends Node, L extends Link>({
   };
 
   useEffect(() => {
+    if (!chargeForce) {
+      simulation.force('charge', null);
+      return;
+    }
+    simulation.force('charge', forceManyBody().strength(chargeForce.strength));
+    return () => {
+      simulation.force('charge', null);
+    };
+  }, [chargeForce]);
+  useEffect(() => {
     if (!gravityForce) {
       simulation.force('center', null);
       return;
     }
-    simulation.force('center', forceCenter(gravityForce.center_x, gravityForce.center_y).strength(gravityForce.force));
+    simulation.force(
+      'center',
+      forceCenter(gravityForce.center_x, gravityForce.center_y).strength(gravityForce.strength),
+    );
+    return () => {
+      simulation.force('center', null);
+    };
   }, [gravityForce]);
+  useEffect(() => {
+    if (!linkForce) {
+      simulation.force('link', null);
+      return;
+    }
+    simulation.force(
+      'link',
+      forceLink<NodeType, SimulationLinkDatum<NodeType>>()
+        .id((d) => d.index)
+        .strength(linkForce.strength)
+        .distance(linkForce.length)
+        .links(simulationLinks),
+    );
+
+    return () => {
+      simulation.force('link', null);
+    };
+  }, [linkForce]);
   // init zoom events
   useEffect(() => {
     const selector = d3Select('#container').select<SVGElement>('svg');
@@ -173,20 +205,7 @@ export function Graph<N extends Node, L extends Link>({
     simulation.force('link') &&
       (simulation.force('link') as ForceLink<NodeType, SimulationLinkDatum<NodeType>>).links(simulationLinks);
   }, [simulationLinks]);
-  useEffect(() => {
-    if (!linkForce) {
-      simulation.force('link', null);
-      return;
-    }
-    simulation.force(
-      'link',
-      forceLink<NodeType, SimulationLinkDatum<NodeType>>()
-        .id((d) => d.index)
-        .strength(linkForce.strength)
-        .distance(linkForce.length)
-        .links(simulationLinks),
-    );
-  }, [linkForce]);
+
   return (
     <div id="container" className="w-full h-full">
       <svg className="w-full h-full">
