@@ -32,9 +32,9 @@ type NodeType = {
 
 const DEFAULT_LINK_LENGTH = 200;
 const DEFAULT_REPULSION_FORCE = -200;
-const DEFAULT_CENTER_FORCE = 0.05;
-const DEFAULT_CENTER_X = 400;
-const DEFAULT_CENTER_Y = 400;
+// const DEFAULT_CENTER_FORCE = 0.05;
+// const DEFAULT_CENTER_X = 400;
+// const DEFAULT_CENTER_Y = 400;
 // use this value as default don't pass value direactly into component props
 // to prevent unecessary 300 re renders C:
 const DEFAULT_ZOOM_SCALE = [0.5, 8] as [number, number];
@@ -48,6 +48,7 @@ export type GraphType<N extends Node, L extends Link> = {
   LinkComponent?: React.FC<{ link: L }>;
   zoomScale?: [number, number];
   linkForce?: { strength: number; length: number };
+  gravityForce?: { force: number; center_x: number; center_y: number };
 };
 export function Graph<N extends Node, L extends Link>({
   graph,
@@ -55,6 +56,7 @@ export function Graph<N extends Node, L extends Link>({
   NodeComponent,
   zoomScale = DEFAULT_ZOOM_SCALE,
   linkForce,
+  gravityForce,
 }: GraphType<N, L>) {
   const { nodes, links } = graph;
   const [, forceUpdate] = useReducer((x) => !x, false);
@@ -64,10 +66,7 @@ export function Graph<N extends Node, L extends Link>({
   const [simulation] = useState(
     forceSimulation()
       // repulsion force
-      .force('charge', forceManyBody().strength(DEFAULT_REPULSION_FORCE))
-
-      // gravity force
-      .force('center', forceCenter(DEFAULT_CENTER_X, DEFAULT_CENTER_Y).strength(DEFAULT_CENTER_FORCE)),
+      .force('charge', forceManyBody().strength(DEFAULT_REPULSION_FORCE)),
   );
   const [simulationNodes, setSimulationNodes] = useState<NodeType[]>([]);
   const [simulationLinks, setSimulationLinks] = useState<SimulationLinkDatum<NodeType>[]>([]);
@@ -104,6 +103,14 @@ export function Graph<N extends Node, L extends Link>({
       .data(simulationNodes)
       .call(customNodeDrag);
   };
+
+  useEffect(() => {
+    if (!gravityForce) {
+      simulation.force('center', null);
+      return;
+    }
+    simulation.force('center', forceCenter(gravityForce.center_x, gravityForce.center_y).strength(gravityForce.force));
+  }, [gravityForce]);
   // init zoom events
   useEffect(() => {
     const selector = d3Select('#container').select<SVGElement>('svg');
