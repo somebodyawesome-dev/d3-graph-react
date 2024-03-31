@@ -25,17 +25,19 @@ type NodeType = {
   fy?: number;
 };
 // links type in simulation
-type LinkType = {
-  source: number;
-  target: number;
-};
+// type LinkType = {
+//   source: number;
+//   target: number;
+// };
 
 const DEFAULT_LINK_LENGTH = 200;
-const DEFAULT_LINK_FORCE_STRENGTH = 1;
 const DEFAULT_REPULSION_FORCE = -200;
 const DEFAULT_CENTER_FORCE = 0.05;
 const DEFAULT_CENTER_X = 400;
 const DEFAULT_CENTER_Y = 400;
+// use this value as default don't pass value direactly into component props
+// to prevent unecessary 300 re renders C:
+const DEFAULT_ZOOM_SCALE = [0.5, 8] as [number, number];
 export type GraphType<N extends Node, L extends Link> = {
   graph: {
     nodes: N[];
@@ -51,7 +53,7 @@ export function Graph<N extends Node, L extends Link>({
   graph,
   LinkComponent,
   NodeComponent,
-  zoomScale = [0.5, 8],
+  zoomScale = DEFAULT_ZOOM_SCALE,
   linkForce,
 }: GraphType<N, L>) {
   const { nodes, links } = graph;
@@ -73,21 +75,6 @@ export function Graph<N extends Node, L extends Link>({
   const refHolder = useRef(nodes.map((_) => createRef<HTMLDivElement>()));
   const { current: nodeRefs } = refHolder;
 
-  // init zoom events
-  const zoomConfig = () => {
-    // onZoom change scale of all elements
-    const onZoom = (d3Event: any) => {
-      const transform = d3Event.transform;
-      d3SelectAll(`#container`).select<SVGElement>('svg').select('g').attr('transform', transform);
-    };
-    const selector = d3Select('#container').select<SVGElement>('svg');
-    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
-    zoomObject.on('zoom', onZoom);
-    zoomObject.scaleTo(selector, 1);
-    // avoid double click on graph to trigger zoom
-    // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
-    selector.call(zoomObject).on('dblclick.zoom', null);
-  };
   // init drag events
   const graphNodeDragConfig = () => {
     const customNodeDrag = d3Drag<SVGGElement, NodeType>()
@@ -117,11 +104,34 @@ export function Graph<N extends Node, L extends Link>({
       .data(simulationNodes)
       .call(customNodeDrag);
   };
-
+  // init zoom events
   useEffect(() => {
+    const selector = d3Select('#container').select<SVGElement>('svg');
+    const elementsHolder = d3SelectAll(`#container`).select<SVGElement>('svg').select('g');
+    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
+    const onZoom = (d3Event: any) => {
+      const transform = d3Event.transform;
+      elementsHolder.attr('transform', transform);
+    };
+    const initZoomConfig = () => {
+      // onZoom change scale of all elements
+      zoomObject.on('zoom', onZoom);
+      // zoomObject.scaleTo(selector, 1);
+      // avoid double click on graph to trigger zoom
+      // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
+      selector.call(zoomObject).on('dblclick.zoom', null);
+    };
+    const clearZoomConfig = () => {
+      zoomObject.on('zoom', null);
+    };
+
     // init configuration setup
-    zoomConfig();
-  }, []);
+    initZoomConfig();
+
+    return () => {
+      clearZoomConfig();
+    };
+  }, [zoomScale]);
   useEffect(() => {
     // map inputs to simulation nodes
     // give nodes different coordination to prevent explosion
@@ -153,7 +163,8 @@ export function Graph<N extends Node, L extends Link>({
   }, [simulationNodes]);
   useEffect(() => {
     // update link force according to simulationLinks updates
-    (simulation.force('link') as ForceLink<NodeType, SimulationLinkDatum<NodeType>>).links(simulationLinks);
+    simulation.force('link') &&
+      (simulation.force('link') as ForceLink<NodeType, SimulationLinkDatum<NodeType>>).links(simulationLinks);
   }, [simulationLinks]);
   useEffect(() => {
     if (!linkForce) {
@@ -162,10 +173,11 @@ export function Graph<N extends Node, L extends Link>({
     }
     simulation.force(
       'link',
-      forceLink<NodeType, LinkType>()
+      forceLink<NodeType, SimulationLinkDatum<NodeType>>()
         .id((d) => d.index)
         .strength(linkForce.strength)
-        .distance(linkForce.length),
+        .distance(linkForce.length)
+        .links(simulationLinks),
     );
   }, [linkForce]);
   return (
