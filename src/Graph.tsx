@@ -155,6 +155,11 @@ export function Graph<N extends Node, L extends Link>({
     const initZoomConfig = () => {
       // onZoom change scale of all elements
       zoomObject.on('zoom', onZoom);
+      //get current zoom level if it exists
+      //then try to check if its value is within zoom range
+      const currentZoomLevel = elementsHolder.attr('transform')?.k;
+      if(currentZoomLevel<zoomScale[0]) zoomObject.scaleTo(selector,zoomScale[0]);
+      if(currentZoomLevel>zoomScale[1]) zoomObject.scaleTo(selector,zoomScale[1]);
       // zoomObject.scaleTo(selector, 1);
       // avoid double click on graph to trigger zoom
       // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
