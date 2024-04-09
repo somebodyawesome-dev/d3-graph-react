@@ -1,7 +1,7 @@
 import { drag as d3Drag } from 'd3-drag';
 import { ForceLink, SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
 import { select as d3Select, selectAll as d3SelectAll } from 'd3-selection';
-import { zoom as d3Zoom } from 'd3-zoom';
+import { zoom as d3Zoom, ZoomTransform } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
 import React, { RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
 
@@ -157,9 +157,11 @@ export function Graph<N extends Node, L extends Link>({
       zoomObject.on('zoom', onZoom);
       //get current zoom level if it exists
       //then try to check if its value is within zoom range
-      const currentZoomLevel = elementsHolder.attr('transform')?.k;
-      if(currentZoomLevel<zoomScale[0]) zoomObject.scaleTo(selector,zoomScale[0]);
-      if(currentZoomLevel>zoomScale[1]) zoomObject.scaleTo(selector,zoomScale[1]);
+      //if there is no value fill it with minimum zoom level possible
+      const currentZoomLevel =
+        (elementsHolder.attr('transform') as unknown as ZoomTransform | undefined)?.k ?? zoomScale[0];
+      if (currentZoomLevel < zoomScale[0]) zoomObject.scaleTo(selector, zoomScale[0]);
+      if (currentZoomLevel > zoomScale[1]) zoomObject.scaleTo(selector, zoomScale[1]);
       // zoomObject.scaleTo(selector, 1);
       // avoid double click on graph to trigger zoom
       // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
