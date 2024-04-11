@@ -1,7 +1,7 @@
 import { drag as d3Drag } from 'd3-drag';
 import { ForceLink, SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
-import { select as d3Select, selectAll as d3SelectAll } from 'd3-selection';
-import { zoom as d3Zoom, ZoomTransform } from 'd3-zoom';
+import { select as d3Select } from 'd3-selection';
+import { zoom as d3Zoom, D3ZoomEvent, zoomTransform } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
 import React, { RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
 
@@ -65,13 +65,13 @@ export function Graph<N extends Node, L extends Link>({
   // init simulation
   // use refrence to prevents re assignment to simulation
   // dont change to state because simulation is constant
+
   const [simulation] = useState(forceSimulation());
   const [simulationNodes, setSimulationNodes] = useState<NodeType[]>([]);
   const [simulationLinks, setSimulationLinks] = useState<SimulationLinkDatum<NodeType>[]>([]);
   // create array of reference  to hold nodes references
   const refHolder = useRef(nodes.map((_) => createRef<HTMLDivElement>()));
   const { current: nodeRefs } = refHolder;
-
   // init drag events
   const graphNodeDragConfig = () => {
     const customNodeDrag = d3Drag<SVGGElement, NodeType>()
@@ -146,29 +146,35 @@ export function Graph<N extends Node, L extends Link>({
   // init zoom events
   useEffect(() => {
     const selector = d3Select('#container').select<SVGElement>('svg');
-    const elementsHolder = d3SelectAll(`#container`).select<SVGElement>('svg').select('g');
-    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
-    const onZoom = (d3Event: any) => {
+    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale); //d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
+    const elementsHolder = selector.select<SVGGraphicsElement>('g');
+    const onZoom = (d3Event: D3ZoomEvent<SVGElement, unknown>) => {
       const transform = d3Event.transform;
-      elementsHolder.attr('transform', transform);
+      elementsHolder.attr('transform', transform.toString());
     };
     const initZoomConfig = () => {
       // onZoom change scale of all elements
       zoomObject.on('zoom', onZoom);
-      //get current zoom level if it exists
-      //then try to check if its value is within zoom range
-      //if there is no value fill it with minimum zoom level possible
-      const currentZoomLevel =
-        (elementsHolder.attr('transform') as unknown as ZoomTransform | undefined)?.k ?? zoomScale[0];
-      if (currentZoomLevel < zoomScale[0]) zoomObject.scaleTo(selector, zoomScale[0]);
-      if (currentZoomLevel > zoomScale[1]) zoomObject.scaleTo(selector, zoomScale[1]);
       // zoomObject.scaleTo(selector, 1);
       // avoid double click on graph to trigger zoom
       // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
       selector.call(zoomObject).on('dblclick.zoom', null);
+      //check if there is a transform in the g tag
+      let currentTransform = zoomTransform(elementsHolder.node()!);
+      // if the current transform is out of zoom scale range
+      // update it accordingly
+      if (currentTransform.k < zoomScale[0]) {
+        currentTransform = currentTransform.scale(zoomScale[0] / currentTransform.k);
+        elementsHolder.attr('transform', currentTransform.toString());
+      }
+      if (currentTransform.k > zoomScale[1]) {
+        currentTransform = currentTransform.scale(zoomScale[1] / currentTransform.k);
+        elementsHolder.attr('transform', currentTransform.toString());
+      }
     };
     const clearZoomConfig = () => {
-      zoomObject.on('zoom', null);
+      selector.on('.zoom', null); // Remove all zoom event listeners from the container
+      zoomObject.on('zoom', null); // i guess this is optional with no effect
     };
 
     // init configuration setup
