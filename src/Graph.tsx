@@ -4,6 +4,7 @@ import { select as d3Select } from 'd3-selection';
 import { zoom as d3Zoom, D3ZoomEvent, zoomTransform } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
 import React, { RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
+import { useAwesomeEffect } from './useAwesomeEffect';
 
 // component inputs
 export type GraphProps = {
@@ -153,12 +154,6 @@ export function Graph<N extends Node, L extends Link>({
       elementsHolder.attr('transform', transform.toString());
     };
     const initZoomConfig = () => {
-      // onZoom change scale of all elements
-      zoomObject.on('zoom', onZoom);
-      // zoomObject.scaleTo(selector, 1);
-      // avoid double click on graph to trigger zoom
-      // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
-      selector.call(zoomObject).on('dblclick.zoom', null);
       //check if there is a transform in the g tag
       let currentTransform = zoomTransform(elementsHolder.node()!);
       // if the current transform is out of zoom scale range
@@ -171,6 +166,13 @@ export function Graph<N extends Node, L extends Link>({
         currentTransform = currentTransform.scale(zoomScale[1] / currentTransform.k);
         elementsHolder.attr('transform', currentTransform.toString());
       }
+      // onZoom change scale of all elements
+      zoomObject.on('zoom', onZoom);
+      zoomObject.transform(selector, currentTransform);
+      // zoomObject.scaleTo(selector, 1);
+      // avoid double click on graph to trigger zoom
+      // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
+      selector.call(zoomObject).on('dblclick.zoom', null);
     };
     const clearZoomConfig = () => {
       selector.on('.zoom', null); // Remove all zoom event listeners from the container
@@ -184,7 +186,7 @@ export function Graph<N extends Node, L extends Link>({
       clearZoomConfig();
     };
   }, [zoomScale]);
-  useEffect(() => {
+  useAwesomeEffect(() => {
     // map inputs to simulation nodes
     // give nodes different coordination to prevent explosion
     setSimulationNodes(
