@@ -39,7 +39,7 @@ const DEFAULT_LINK_LENGTH = 200;
 // use this value as default don't pass value direactly into component props
 // to prevent unecessary 300 re renders C:
 const DEFAULT_ZOOM_SCALE = [0.5, 8] as [number, number];
-export type GraphType<N extends Node, L extends Link> = {
+export type GraphType<N extends Node = Node, L extends Link = Link> = {
   graph: {
     nodes: N[];
     links: L[];
