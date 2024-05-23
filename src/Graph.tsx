@@ -1,5 +1,5 @@
 import { drag as d3Drag } from 'd3-drag';
-import { SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
+import { Simulation, SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
 import { select as d3Select } from 'd3-selection';
 import { zoom as d3Zoom, D3ZoomEvent, zoomTransform } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
@@ -69,7 +69,7 @@ export function Graph<N extends Node, L extends Link>({
   // use refrence to prevents re assignment to simulation
   // dont change to state because simulation is constant
 
-  const [simulation] = useState(forceSimulation());
+  const [simulation, setSimulation] = useState<Simulation<NodeType, SimulationLinkDatum<NodeType>> | null>(null);
   const [simulationNodes, setSimulationNodes] = useState<NodeType[]>([]);
   const [simulationLinks, setSimulationLinks] = useState<SimulationLinkDatum<NodeType>[]>([]);
   // create array of reference  to hold nodes references
@@ -81,6 +81,7 @@ export function Graph<N extends Node, L extends Link>({
     const customNodeDrag = d3Drag<SVGGElement, NodeType>();
     const selector = d3Select('#container').select<SVGElement>('svg').selectAll<SVGGElement, NodeType>('.node');
     const graphNodeDragConfig = () => {
+      if (!simulation) return;
       customNodeDrag
         .on('start', (ev) => {
           if (!ev.active) simulation.alphaTarget(0.3).restart();
@@ -115,16 +116,19 @@ export function Graph<N extends Node, L extends Link>({
     };
   }, [isNodeDraggable, simulationNodes]);
   useEffect(() => {
+    if (!simulation) return;
     if (!chargeForce) {
       simulation.force('charge', null);
       return;
     }
     simulation.force('charge', forceManyBody().strength(chargeForce.strength));
+    simulation.alphaTarget(0.3).restart();
     return () => {
       simulation.force('charge', null);
     };
-  }, [chargeForce]);
+  }, [simulation, chargeForce]);
   useEffect(() => {
+    if (!simulation) return;
     if (!gravityForce) {
       simulation.force('center', null);
       return;
@@ -133,11 +137,13 @@ export function Graph<N extends Node, L extends Link>({
       'center',
       forceCenter(gravityForce.center_x, gravityForce.center_y).strength(gravityForce.strength),
     );
+    simulation.alphaTarget(0.3).restart();
     return () => {
       simulation.force('center', null);
     };
-  }, [gravityForce]);
+  }, [simulation, gravityForce]);
   useEffect(() => {
+    if (!simulation) return;
     if (!linkForce) {
       simulation.force('link', null);
       return;
@@ -152,10 +158,13 @@ export function Graph<N extends Node, L extends Link>({
         .links(simulationLinks),
     );
 
+    // simulation.alpha(1).restart();
+
+    simulation.alphaTarget(0.3).restart();
     return () => {
       simulation.force('link', null);
     };
-  }, [linkForce, simulationNodes, simulationLinks]);
+  }, [simulation, linkForce, simulationNodes, simulationLinks]);
   // init zoom events
   useEffect(() => {
     const selector = d3Select('#container').select<SVGElement>('svg');
@@ -201,11 +210,10 @@ export function Graph<N extends Node, L extends Link>({
   useAwesomeEffect(() => {
     // map inputs to simulation nodes
     // give nodes different coordination to prevent explosion
-    setSimulationNodes(
-      nodes.map((_, index) => {
-        return { index, id: index, x: index * 5, y: index * 0, vx: 0, vy: 0 };
-      }),
-    );
+    const simNodes = nodes.map((_, index) => {
+      return { index, id: index, x: index * 5, y: index * 0, vx: 0, vy: 0 };
+    });
+    setSimulationNodes(simNodes);
     // map inputs to simulation links
     setSimulationLinks(
       links.map((val) => {
@@ -214,18 +222,29 @@ export function Graph<N extends Node, L extends Link>({
     );
 
     refHolder.current = nodes.map((_) => createRef<HTMLDivElement>());
+
+    setSimulation(
+      forceSimulation<NodeType, SimulationLinkDatum<NodeType>>()
+        .nodes(simNodes)
+        .on('tick', () => {
+          // force re render of component because d3.js is not suited for react
+          // and interanlly d3.js is changing states value every tick
+          forceUpdate();
+        }),
+    );
   }, [graph]);
-  useEffect(() => {
-    // synchronize event listener to simulationNodes update
-    simulation
-      .nodes(simulationNodes)
-      .on('tick', () => {
-        // force re render of component because d3.js is not suited for react
-        // and interanlly d3.js is changing states value every tick
-        forceUpdate();
-      })
-      .restart();
-  }, [simulationNodes]);
+  // useEffect(() => {
+  //   if (!simulation) return;
+  //   // synchronize event listener to simulationNodes update
+  //   simulation
+  //     .nodes(simulationNodes)
+  //     .on('tick', () => {
+  //       // force re render of component because d3.js is not suited for react
+  //       // and interanlly d3.js is changing states value every tick
+  //       forceUpdate();
+  //     })
+  //     .restart();
+  // }, [simulation]);
   // useEffect(() => {
   //   // update link force according to simulationLinks updates
   //   simulation.force('link') &&
