@@ -3,7 +3,7 @@ import { Simulation, SimulationLinkDatum, forceCenter, forceLink, forceManyBody,
 import { select as d3Select } from 'd3-selection';
 import { zoom as d3Zoom, D3ZoomEvent, zoomTransform } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
-import React, { RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
+import React, { ReactNode, RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
 import { useAwesomeEffect } from './useAwesomeEffect';
 
 // component inputs
@@ -293,7 +293,9 @@ export function Graph<N extends Node, L extends Link>({
             const node = nodes[val.index];
 
             return NodeComponent ? (
-              <NodeComponent key={`node-${index}`} node={node} />
+              <ForignObjectWrapper key={`node-${index}`} ref={nodeRefs[index]} node={val}>
+                <NodeComponent node={node} />
+              </ForignObjectWrapper>
             ) : (
               <TopicNode title={'awesome title'} ref={nodeRefs[index]} key={`node-${index}`} {...val} />
             );
@@ -308,6 +310,23 @@ export function Graph<N extends Node, L extends Link>({
     </div>
   );
 }
+const ForignObjectWrapper = forwardRef<HTMLDivElement, { children: ReactNode; node: NodeType }>(
+  ({ children, node: { x, y } }, _ref) => {
+    return (
+      <g
+        className="node"
+        // cx={85} cy={32}
+        transform={`translate(${x},${y})`}
+      >
+        <foreignObject x="0" y="0" className="w-fit h-fit overflow-visible">
+          <div className="w-fit h-fit" ref={_ref}>
+            {children}
+          </div>
+        </foreignObject>
+      </g>
+    );
+  },
+);
 const Path = ({
   sourceNode,
   sourceNodeRef,
