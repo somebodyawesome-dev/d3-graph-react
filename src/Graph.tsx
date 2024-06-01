@@ -6,12 +6,6 @@ import { isEmpty } from 'lodash-es';
 import React, { ReactNode, RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
 import { useAwesomeEffect } from './useAwesomeEffect';
 
-// component inputs
-export type GraphProps = {
-  nodes: { title: string; isTopic: boolean }[];
-  links: { from: number; to: number }[];
-};
-
 export type Node = { id: string | number };
 export type Link = { source: number; target: number };
 // node type in the simulation
@@ -46,7 +40,13 @@ export type GraphType<N extends Node = Node, L extends Link = Link> = {
   };
   // NodeComponent?: (node: N) => React.JSX.Element;
   NodeComponent?: React.FC<{ node: N }>;
-  LinkComponent?: React.FC<{ link: L }>;
+  LinkComponent?: React.FC<{
+    link: L;
+    sourceNode: NodeType;
+    sourceNodeRef: RefObject<HTMLDivElement>;
+    targetNode: NodeType;
+    targetNodeRef: RefObject<HTMLDivElement>;
+  }>;
   zoomScale?: [number, number];
   linkForce?: { strength: number; length: number };
   gravityForce?: { strength: number; center_x: number; center_y: number };
@@ -277,9 +277,16 @@ export function Graph<N extends Node, L extends Link>({
             const targetNodeRef = nodeRefs[targetNode.index];
 
             return LinkComponent ? (
-              <LinkComponent link={link} key={`link-${index}`} />
+              <LinkComponent
+                link={link}
+                key={`link-${index}`}
+                sourceNode={sourceNode}
+                sourceNodeRef={sourceNodeRef}
+                targetNode={targetNode}
+                targetNodeRef={targetNodeRef}
+              />
             ) : (
-              <Path
+              <DefaultLinkComponent
                 key={`links-${index}`}
                 sourceNode={sourceNode}
                 sourceNodeRef={sourceNodeRef}
@@ -292,12 +299,10 @@ export function Graph<N extends Node, L extends Link>({
             // TODO: add custom component
             const node = nodes[val.index];
 
-            return NodeComponent ? (
+            return (
               <ForignObjectWrapper key={`node-${index}`} ref={nodeRefs[index]} node={val}>
-                <NodeComponent node={node} />
+                {NodeComponent && <NodeComponent node={node} />}
               </ForignObjectWrapper>
-            ) : (
-              <TopicNode title={'awesome title'} ref={nodeRefs[index]} key={`node-${index}`} {...val} />
             );
             // return node.isTopic ? (
             //   <TopicNode title={node.title} ref={nodeRefs[index]} key={index} {...val} />
@@ -310,8 +315,8 @@ export function Graph<N extends Node, L extends Link>({
     </div>
   );
 }
-const ForignObjectWrapper = forwardRef<HTMLDivElement, { children: ReactNode; node: NodeType }>(
-  ({ children, node: { x, y } }, _ref) => {
+const ForignObjectWrapper = forwardRef<HTMLDivElement, { children?: ReactNode; node: NodeType }>(
+  ({ children, node: { x, y } }, ref) => {
     return (
       <g
         className="node"
@@ -319,15 +324,15 @@ const ForignObjectWrapper = forwardRef<HTMLDivElement, { children: ReactNode; no
         transform={`translate(${x},${y})`}
       >
         <foreignObject x="0" y="0" className="w-fit h-fit overflow-visible">
-          <div className="w-fit h-fit" ref={_ref}>
-            {children}
+          <div className="w-fit h-fit" ref={ref}>
+            {children ?? <DefaultNodeComponent name="Node" />}
           </div>
         </foreignObject>
       </g>
     );
   },
 );
-const Path = ({
+const DefaultLinkComponent = ({
   sourceNode,
   sourceNodeRef,
   targetNode,
@@ -347,79 +352,21 @@ const Path = ({
       className="link"
       fill="none"
       markerEnd="url(#arrowhead)"
-      // @ts-ignore
       d={`M ${sourceNode.x + sourceOffsetWidth / 2},${sourceNode.y + sourceOffsetHeight / 2} L ${
         targetNode.x + targetOffsetWidth / 2
-      } ${
-        // @ts-ignore
-        targetNode.y + targetOffsetHeight / 2
-      }`}
+      } ${targetNode.y + targetOffsetHeight / 2}`}
       // strokeLinecap="butt"
       stroke={'gray'}
       strokeWidth={1}
     ></path>
   );
 };
-// const _MsNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(({ x, y, title }, ref) => {
-//   return (
-//     <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
-//       <foreignObject x="0" y="0" className="w-1 h-1 overflow-visible">
-//         <MicroserviceCard ref={ref} name={title} />
-//       </foreignObject>
-//     </g>
-//   );
-// });
-const TopicNode = forwardRef<HTMLDivElement, { x: number; y: number; title: string }>(({ x, y, title }, ref) => {
-  return (
-    <g className="node" cx={85} cy={32} transform={`translate(${x},${y})`}>
-      <foreignObject x="0" y="0" className="w-1 h-1 overflow-visible">
-        <Topic ref={ref} name={title} />
-      </foreignObject>
-    </g>
-  );
-});
-const Topic = forwardRef<HTMLDivElement, { name: string }>((params, ref) => {
+
+const DefaultNodeComponent = (params: { name: string }) => {
   const { name } = params;
   return (
-    <div
-      className="bg-white border-4 whitespace-  border-solid border-gray-300 rounded-xl px-2 min-w-[100px] min-h-[50px] flex justify-center items-center"
-      ref={ref}
-    >
+    <div className="bg-white border-4 whitespace-  border-solid border-gray-300 rounded-xl px-2 min-w-[100px] min-h-[50px] flex justify-center items-center">
       <h1 className=" font-bold text-gray-600 text-sm text-center">{name}</h1>
     </div>
   );
-});
-// const MicroserviceCard = forwardRef<HTMLDivElement, { name: string }>((params, ref) => {
-//   const { name } = params;
-//   return (
-//     <div
-//       ref={ref}
-//       className="bg-white relative overflow-hidden border border-solid border-gray-400 w-[170px] max-w-[180px]  py-3 flex flex-col justify-center items-center gap-3 hover:scale-[101%] transition-all"
-//     >
-//       <span className="animate-animateTop absolute top-0 left-0 w-full h-[3px] bg-gradient-to-l from-[#FFFFFF] to-[#26d926] "></span>
-//       <span className="animate-animateRight absolute top-0 right-0 h-full w-[3px] bg-gradient-to-t from-[#FFFFFF] to-[#26d926] "></span>
-//       <span className="animate-animateBottom absolute bottom-0 left-0 h-[3px] w-full bg-gradient-to-r from-[#FFFFFF] to-[#26d926] "></span>
-//       <span className="animate-animateLeft absolute top-0 left-0 h-full w-[3px] bg-gradient-to-b from-[#FFFFFF] to-[#26d926] "></span>
-//       <div className="w-full flex flex-col gap-1  p-2">
-//         <Text title="Microservice Name" value={name} />
-//       </div>
-
-//       {/* <div className="relative rounded-full">
-//           <div className="overflow-hidden p-2 group transition-all bg-transparent border-2 border-[#FF7900] hover:border-[#FF7900]  rounded flex justify-center items-center cursor-pointer after:absolute after:-z-20 after:content-[''] after:h-full after:inset-0 after:bg-[#FF7900] after:transition-all after:w-0 after:hover:w-full after:rounded">
-
-//             <span className="font-bold text-[#FF7900] group-hover:text-black">
-//               More infos
-//             </span>
-//           </div>
-//         </div> */}
-//     </div>
-//   );
-// });
-// const Text = ({ title, value, inSameLine }: { title: string; value: string; inSameLine?: boolean }) => {
-//   return (
-//     <div className={`flex ${!inSameLine ? 'flex-row' : 'flex-col'}  gap-0 relative`}>
-//       <h4 className=" absolute -top-4 text-xs font-medium text-[#FF7900]">{title}</h4>
-//       <h1 className="font-bold text-base">{value}</h1>
-//     </div>
-//   );
-// };
+};
