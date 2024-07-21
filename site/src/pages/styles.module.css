@@ -1,0 +1,25 @@
+/* styles.module.css */
+
+.appContainer {
+    margin-top: 20px; /* Adjust the top margin to ensure proper spacing below the navbar */
+  }
+  
+  .graphContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Adjust padding as needed */
+    border: 1px solid #eaeaea; /* Optional border for visual separation */
+    background-color: #f9f9f9; /* Optional background color */
+    border-radius: 8px; /* Optional rounded corners */
+  }
+  
+  .panelContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 20px; /* Adjust padding as needed */
+    border: 1px solid #eaeaea; /* Optional border for visual separation */
+    background-color: #fff; /* Optional background color */
+    border-radius: 8px; /* Optional rounded corners */
+  }
+  

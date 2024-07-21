@@ -1,0 +1,48 @@
+/* src/css/custom.css */
+
+/* General styles */
+.text-primary {
+    color: #000000; /* Dark text color */
+}
+
+.text-secondary {
+    color: #cbd5e0; /* Light text color */
+}
+
+.input {
+    /* Example input styles */
+    border-color: #000000; /* Border color */
+    background-color: #2d3748; /* Background color */
+    color: #cbd5e0; /* Text color */
+}
+
+/* Light mode styles */
+[data-theme='light'] .input {
+    color: #ffffff; /* Light mode text color */
+}
+
+[data-theme='light'] #panel {
+    background-color: rgba(240, 233, 233, 0.819);
+    
+}
+[data-theme='light'] #nodes {
+    background-color: rgba(240, 233, 233, 0.819);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;    
+}
+
+/* Dark mode styles */
+[data-theme='dark'] #nodes {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    background-image: url('/img/stars.gif'); /* Path to your GIF */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    animation: none; /* Disable any animation */
+    border-top-right-radius: 10px; /* Adjust the border radius as needed */
+    border-bottom-right-radius: 10px; /* Adjust the border radius as needed */
+}
+
+
+
+
+
