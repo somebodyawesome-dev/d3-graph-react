@@ -143,39 +143,24 @@ const NewSection = () => {
 
           <TextContainer>
             <Title variant="h2" gutterBottom>
-              D3 Package for React & TypeScript
+              D3-force wrapper package for React & TypeScript
             </Title>
             <Description variant="body1">
-              Seamlessly integrate <span className={styles.orangeText}>powerful</span> data visualizations into your React projects.
+              Seamlessly integrate <span className={styles.orangeText}>Powerful</span> data visualizations into your React projects.
             </Description>
             <Description variant="body1">
               Key Features:
             </Description>
             <List>
-              <ListItem>
-                <ListItemIcon>
-                  <CheckIcon className={styles.icon} />
-                </ListItemIcon>
-                <ListItemText primary="Easy integration" />
-              </ListItem>
-              <ListItem>
-                <ListItemIcon>
-                  <CheckIcon className={styles.icon} />
-                </ListItemIcon>
-                <ListItemText primary="TypeScript support" />
-              </ListItem>
-              <ListItem>
-                <ListItemIcon>
-                  <CheckIcon className={styles.icon} />
-                </ListItemIcon>
-                <ListItemText primary="Smooth animations" />
-              </ListItem>
-              <ListItem>
-                <ListItemIcon>
-                  <CheckIcon className={styles.icon} />
-                </ListItemIcon>
-                <ListItemText primary="Efficient rendering" />
-              </ListItem>
+              {["Easy integration", "TypeScript support", "Custom data support","Render React component", "Wrap different modules like (d3-zoom, d3-force, d3-drag...)"].map(text =>
+                <ListItem>
+                  <ListItemIcon>
+                    <CheckIcon className={styles.icon} />
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              )}
+             
             </List>
           </TextContainer>
           <Hidden mdDown>

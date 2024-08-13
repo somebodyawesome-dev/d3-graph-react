@@ -14,7 +14,7 @@ const Title = styled(Typography)(({ theme }) => ({
 const data = [
   {
     id: 1,
-    title: "Smooth Data Visualizations",
+    title: "Support Custom data",
     description: "Create smooth and interactive data visualizations with ease using our D3 package. Effortlessly integrate complex data into your React applications while maintaining high performance.",
     image: "/img/21118602_6428509.svg",
     features: [
@@ -26,7 +26,7 @@ const data = [
   },
   {
     id: 2,
-    title: "Integration with React and TypeScript",
+    title: "TypeScript Support",
     description: "Seamlessly integrate our D3 package with React and TypeScript projects. Utilize TypeScript's strong typing system for enhanced development experience and maintainability.",
     image: "/img/bes.png",
     features: [
@@ -38,9 +38,9 @@ const data = [
   },
   {
     id: 3,
-    title: "Comprehensive Documentation",
+    title: "Open-source",
     description: "Access comprehensive documentation and dedicated support to guide you through integrating and using our D3 package effectively. Learn best practices and tips from our community and experts.",
-    image: "/img/5573507_2920021.svg",
+    image: "/img/open-source.png",
     features: [
       "Detailed API documentation.",
       "Example code snippets and tutorials.",
