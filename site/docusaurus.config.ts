@@ -1,13 +1,13 @@
 module.exports = {
   title: 'D3 JS',
-  tagline: 'Facilitating the use of D3 with React and TypeScript',
+  tagline: 'Facilitating the use of D3-force with React and TypeScript',
   url: 'https://your-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
-  organizationName: 'your-org', // Usually your GitHub org/user name.
-  projectName: 'your-repo', // Usually your repo name.
+  favicon: 'img/node.png',
+  organizationName: 'somebodyawesome-dev', // Usually your GitHub org/user name.
+  projectName: 'd3-graph-react', // Usually your repo name.
   headTags: [
     {
       tagName: 'link',
@@ -27,18 +27,21 @@ module.exports = {
     // Add your custom JavaScript file path relative to the `static` directory
     './src/lib/custom.js',
   ],
-  
+
   themeConfig: {
+    colorMode: {
+      disableSwitch: true, // This disables the theme toggle button
+    },
     navbar: {
       style: 'dark',
-      title: 'D3 JS',
+      title: 'd3-graph-react',
       logo: {
-        alt: 'My D3 Library Logo',
-        src: 'img/logo.svg',
+        alt: 'd3-graph-react Logo',
+        src: 'img/nodes.png',
       },
       items: [
         {
-          to: 'docs/Getting Started/Introduction',
+          to: 'docs/Introduction',
           activeBasePath: 'docs',
           label: 'Docs',
           position: 'left',
@@ -49,35 +52,11 @@ module.exports = {
           position: 'left',
         },
         {
-          href: 'https://github.com/your-org/your-repo',
+          href: 'https://github.com/somebodyawesome-dev/d3-graph-react',
           label: 'GitHub',
           position: 'right',
         },
       ],
-    },
-    footer: {
-      style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Getting Started',
-              to: 'docs/getting-started',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'GitHub',
-              href: 'https://github.com/your-org/your-repo',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My D3 Library, Inc. Built with Docusaurus.`,
     },
   },
   presets: [

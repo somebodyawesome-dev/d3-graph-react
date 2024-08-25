@@ -1,53 +1,11 @@
 {
-  "name": "d3-graph-react",
+  "name": "d3-graph-react-mono",
   "version": "1.0.0",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/esm/index.d.ts",
-  "files": [
-    "lib/**/*"
+  "repository": "git@github.com:somebodyawesome-dev/d3-graph-react.git",
+  "author": "somebodyawesome-dev <luckynoob2011830@gmail.com>",
+  "license": "MIT",
+  "workspaces": [
+    "*"
   ],
-  "dependencies": {
-    "d3-drag": "^3.0.0",
-    "d3-force": "^3.0.0",
-    "d3-selection": "^3.0.0",
-    "d3-zoom": "^3.0.0",
-    "lodash-es": "^4.17.21",
-    "tslib": "^2.6.2"
-  },
-  "scripts": {
-    "build": "rollup -c --bundleConfigAsCjs",
-    "build2": "tsc && npx tailwindcss -o ./lib/index.css --minify",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
-  },
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@types/d3-drag": "^3.0.2",
-    "@types/d3-force": "^3.0.4",
-    "@types/d3-zoom": "^3.0.3",
-    "@types/lodash-es": "^4.17.7",
-    "@types/node": "^20.3.3",
-    "@types/react": "^18.2.14",
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31",
-    "prettier": "^2.8.8",
-    "rollup": "^4.3.0",
-    "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-typescript2": "^0.36.0",
-    "tailwindcss": "^3.3.5",
-    "tslint": "^6.1.3",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^5.2.2"
-  },
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  }
+  "private":true
 }

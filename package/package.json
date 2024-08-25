@@ -1,0 +1,67 @@
+{
+  "name": "d3-graph-react",
+  "version": "1.0.0",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "license":"MIT",
+  "files": [
+    "lib/**/*"
+  ],
+  "dependencies": {
+    "d3-drag": "^3.0.0",
+    "d3-force": "^3.0.0",
+    "d3-selection": "^3.0.0",
+    "d3-zoom": "^3.0.0",
+    "lodash-es": "^4.17.21",
+    "tslib": "^2.6.2"
+  },
+  "scripts": {
+    "build": "rollup -c --bundleConfigAsCjs",
+    "build2": "tsc && npx tailwindcss -o ./lib/index.css --minify",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.7",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/d3-drag": "^3.0.2",
+    "@types/d3-force": "^3.0.4",
+    "@types/d3-zoom": "^3.0.3",
+    "@types/lodash-es": "^4.17.7",
+    "@types/node": "^20.3.3",
+    "@types/react": "^18.3.4",
+    "@types/rollup-plugin-peer-deps-external": "^2.2.5",
+    "autoprefixer": "^10.4.16",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^9.1.3",
+    "postcss": "^8.4.31",
+    "prettier": "^2.8.8",
+    "react": "^18.3.1",
+    "rollup": "^4.3.0",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "tailwindcss": "^3.3.5",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

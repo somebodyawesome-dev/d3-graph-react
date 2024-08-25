@@ -19,17 +19,7 @@ type NodeType = {
   fx?: number;
   fy?: number;
 };
-// links type in simulation
-// type LinkType = {
-//   source: number;
-//   target: number;
-// };
-
 const DEFAULT_LINK_LENGTH = 200;
-// const DEFAULT_REPULSION_FORCE = -200;
-// const DEFAULT_CENTER_FORCE = 0.05;
-// const DEFAULT_CENTER_X = 400;
-// const DEFAULT_CENTER_Y = 400;
 // use this value as default don't pass value direactly into component props
 // to prevent unecessary 300 re renders C:
 const DEFAULT_ZOOM_SCALE = [0.5, 8] as [number, number];
@@ -63,8 +53,8 @@ export function Graph<N extends Node, L extends Link>({
   chargeForce,
   isNodeDraggable = true,
 }: GraphType<N, L>) {
-  const { nodes, links } = graph;
   const [, forceUpdate] = useReducer((x) => !x, false);
+  const { nodes, links } = graph;
   // init simulation
   // use refrence to prevents re assignment to simulation
   // dont change to state because simulation is constant
