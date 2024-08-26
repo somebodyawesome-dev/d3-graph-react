@@ -242,7 +242,7 @@ export function Graph<N extends Node, L extends Link>({
   // }, [simulationLinks]);
 
   return (
-    <div id="container" className="w-fill flex">
+    <div id="container" className="w-full flex">
       <svg className="w-full min-h-full">
         <defs>
           <marker
