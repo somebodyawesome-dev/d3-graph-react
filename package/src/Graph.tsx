@@ -242,8 +242,8 @@ export function Graph<N extends Node, L extends Link>({
   // }, [simulationLinks]);
 
   return (
-    <div id="container" className="w-full h-full">
-      <svg className="w-full h-full">
+    <div id="container" className="w-fill flex">
+      <svg className="w-full min-h-full">
         <defs>
           <marker
             id="arrowhead"
@@ -314,7 +314,7 @@ const ForignObjectWrapper = forwardRef<HTMLDivElement, { children?: ReactNode; n
         transform={`translate(${x},${y})`}
       >
         <foreignObject x="0" y="0" className="w-fit h-fit overflow-visible">
-          <div className="w-fit h-fit" ref={ref}>
+          <div className="w-min flex" ref={ref}>
             {children ?? <DefaultNodeComponent name="Node" />}
           </div>
         </foreignObject>

@@ -1,19 +1,19 @@
-import 'react';
-import { Graph, GraphType } from 'd3-graph-react';
-import { useEffect, useState, useReducer } from 'react';
-import './example.css';
+import "react";
+import { Graph, GraphType } from "d3-graph-react";
+import { useEffect, useState, useReducer } from "react";
+import "./example.css";
 function PlayGround() {
   const [zoomScale, _setZoomScale] = useState<[number, number]>([0.5, 8]);
-  const [linkForce, setLinkForce] = useState<GraphType['linkForce']>({
+  const [linkForce, setLinkForce] = useState<GraphType["linkForce"]>({
     length: 200,
     strength: 1,
   });
-  const [gravityForce, setGravityForce] = useState<GraphType['gravityForce']>({
+  const [gravityForce, setGravityForce] = useState<GraphType["gravityForce"]>({
     center_x: 200,
     center_y: 200,
     strength: 0.05,
   });
-  const [chargeForce, setChargeForce] = useState<GraphType['chargeForce']>({
+  const [chargeForce, setChargeForce] = useState<GraphType["chargeForce"]>({
     strength: -10,
   });
   const [draggable, setDraggable] = useState(true);
@@ -35,17 +35,20 @@ function PlayGround() {
     handleResize();
 
     // Attach resize listener
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     return () => {
       // Cleanup: remove resize listener
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
     <div className="flex flex-col md:flex-row">
       {/* Panel for controls */}
-      <div id="panel" className="w-full md:w-1/2 flex flex-col bg-gray-900 px-4 py-2 md:py-4 md:px-6 overflow-auto">
+      <div
+        id="panel"
+        className="w-full md:w-1/2 flex flex-col bg-gray-900 px-4 py-2 md:py-4 md:px-6 overflow-auto"
+      >
         {/* Controls for draggable */}
         <div className="mb-4">
           <h3 className="text-lg font-semibold mb-2">Node:</h3>
@@ -69,7 +72,7 @@ function PlayGround() {
               <input
                 type="text"
                 placeholder="Minimum Value"
-                defaultValue={'0.5'}
+                defaultValue={"0.5"}
                 className="input w-full input-bordered py-1 px-2"
                 onChange={(e) => {
                   const value = parseFloat(e.target.value);
@@ -84,7 +87,7 @@ function PlayGround() {
               <input
                 type="text"
                 placeholder="Maximum Value"
-                defaultValue={'8'}
+                defaultValue={"8"}
                 className="input w-full input-bordered py-1 px-2"
                 onChange={(e) => {
                   const value = parseFloat(e.target.value);
@@ -106,7 +109,7 @@ function PlayGround() {
               <input
                 type="text"
                 placeholder="Length Value"
-                defaultValue={'200'}
+                defaultValue={"200"}
                 className="input w-full input-bordered py-1 px-2"
                 onChange={(e) => {
                   const value = parseFloat(e.target.value);
@@ -121,7 +124,7 @@ function PlayGround() {
               <input
                 type="text"
                 placeholder="Strength Value"
-                defaultValue={'1'}
+                defaultValue={"1"}
                 className="input w-full input-bordered py-1 px-2"
                 onChange={(e) => {
                   const value = parseFloat(e.target.value);
@@ -219,24 +222,43 @@ function PlayGround() {
           zoomScale={zoomScale}
           gravityForce={gravityForce}
           chargeForce={chargeForce}
-          NodeComponent={({}) => (
-            <div className="bg-transparent border-4 whitespace- border-solid border-gray-300 rounded-xl px-2 min-w-[100px] min-h-[50px] flex justify-center items-center">
-              Ba3
-            </div>
-          )}
-          LinkComponent={({ sourceNode, sourceNodeRef, targetNode, targetNodeRef }) => {
-            if (!sourceNode || !targetNode || !sourceNodeRef.current || !targetNodeRef.current) return null;
-            const { offsetWidth: sourceOffsetWidth, offsetHeight: sourceOffsetHeight } = sourceNodeRef.current!;
-            const { offsetWidth: targetOffsetWidth, offsetHeight: targetOffsetHeight } = targetNodeRef.current!;
+          // NodeComponent={({}) => (
+          //   <div className="bg-transparent border-4 whitespace- border-solid border-gray-300 rounded-xl px-2 min-w-[100px] min-h-[50px] flex justify-center items-center">
+          //     Ba3
+          //   </div>
+          // )}
+          LinkComponent={({
+            sourceNode,
+            sourceNodeRef,
+            targetNode,
+            targetNodeRef,
+          }) => {
+            if (
+              !sourceNode ||
+              !targetNode ||
+              !sourceNodeRef.current ||
+              !targetNodeRef.current
+            )
+              return null;
+            const {
+              offsetWidth: sourceOffsetWidth,
+              offsetHeight: sourceOffsetHeight,
+            } = sourceNodeRef.current!;
+            const {
+              offsetWidth: targetOffsetWidth,
+              offsetHeight: targetOffsetHeight,
+            } = targetNodeRef.current!;
             return (
               <path
                 className="link"
                 fill="none"
                 markerEnd="url(#arrowhead)"
-                d={`M ${sourceNode.x + sourceOffsetWidth / 2},${sourceNode.y + sourceOffsetHeight / 2} L ${
-                  targetNode.x + targetOffsetWidth / 2
-                } ${targetNode.y + targetOffsetHeight / 2}`}
-                stroke={'gray'}
+                d={`M ${sourceNode.x + sourceOffsetWidth / 2},${
+                  sourceNode.y + sourceOffsetHeight / 2
+                } L ${targetNode.x + targetOffsetWidth / 2} ${
+                  targetNode.y + targetOffsetHeight / 2
+                }`}
+                stroke={"gray"}
                 strokeWidth={1}
               ></path>
             );

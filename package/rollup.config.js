@@ -25,14 +25,6 @@ export default [
     treeshake: 'smallest',
     plugins: [
       peerDepsExternal(),
-      babel({
-        babelHelpers: 'bundled',
-        presets: [
-          '@babel/preset-env',
-          '@babel/preset-react',
-          '@babel/preset-typescript', // Include TypeScript preset
-        ],
-      }),
       nodeResolve(),
       commonjs(),
       typescript({
@@ -40,6 +32,14 @@ export default [
       }),
       postCSS({
         plugins: [require('autoprefixer')],
+      }),
+      babel({
+        babelHelpers: 'bundled',
+        presets: [
+          '@babel/preset-env',
+          '@babel/preset-react',
+          '@babel/preset-typescript', // Include TypeScript preset
+        ],
       }),
 
       // { browser: true, dedupe: ['react', 'react-dom'] }
