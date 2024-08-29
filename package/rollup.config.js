@@ -25,24 +25,28 @@ export default [
     treeshake: 'smallest',
     plugins: [
       peerDepsExternal(),
-      nodeResolve(),
-      commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
       }),
       postCSS({
-        plugins: [require('autoprefixer')],
+        extract: false, // Inline styles to the JS file
+        extensions: ['.css'],
+        minimize: true,
+        modules: false,
+
+        plugins: [require('tailwindcss'), require('autoprefixer')],
       }),
       babel({
         babelHelpers: 'bundled',
+        exclude: 'node_modules/**',
         presets: [
           '@babel/preset-env',
           '@babel/preset-react',
           '@babel/preset-typescript', // Include TypeScript preset
         ],
       }),
-
-      // { browser: true, dedupe: ['react', 'react-dom'] }
+      nodeResolve(),
+      commonjs(),
 
       terser(),
       replace({
