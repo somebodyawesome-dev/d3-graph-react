@@ -1,6 +1,5 @@
-import "react";
 import { Graph, GraphType } from "d3-graph-react";
-import { useEffect, useState, useReducer } from "react";
+import { useEffect, useState } from "react";
 import "./example.css";
 function PlayGround() {
   const [zoomScale, _setZoomScale] = useState<[number, number]>([0.5, 8]);
@@ -222,11 +221,7 @@ function PlayGround() {
           zoomScale={zoomScale}
           gravityForce={gravityForce}
           chargeForce={chargeForce}
-          // NodeComponent={({}) => (
-          //   <div className="bg-transparent border-4 whitespace- border-solid border-gray-300 rounded-xl px-2 min-w-[100px] min-h-[50px] flex justify-center items-center">
-          //     Ba3
-          //   </div>
-          // )}
+          NodeComponent={({}) => <div className="">Ba3</div>}
           LinkComponent={({
             sourceNode,
             sourceNodeRef,

@@ -5,6 +5,7 @@ import { zoom as d3Zoom, D3ZoomEvent, zoomTransform } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
 import React, { ReactNode, RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
 import { useAwesomeEffect } from './useAwesomeEffect';
+import './index.css';
 
 export type Node = { id: string | number };
 export type Link = { source: number; target: number };
