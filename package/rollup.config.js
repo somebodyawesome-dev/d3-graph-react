@@ -29,12 +29,11 @@ export default [
         tsconfig: './tsconfig.json',
       }),
       postCSS({
-        extract: false, // Inline styles to the JS file
-        extensions: ['.css'],
+        plugins: [require('tailwindcss'), require('autoprefixer')],
+        // extract: false, // Inline styles to the JS file
         minimize: true,
         modules: false,
-
-        plugins: [require('tailwindcss'), require('autoprefixer')],
+        extensions: ['.css'],
       }),
       babel({
         babelHelpers: 'bundled',
