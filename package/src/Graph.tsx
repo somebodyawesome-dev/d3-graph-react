@@ -1,11 +1,11 @@
 import { drag as d3Drag } from 'd3-drag';
 import { Simulation, SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
 import { select as d3Select } from 'd3-selection';
-import { zoom as d3Zoom, D3ZoomEvent, zoomTransform } from 'd3-zoom';
+import { D3ZoomEvent, zoom as d3Zoom, zoomTransform } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
 import React, { ReactNode, RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
-import { useAwesomeEffect } from './useAwesomeEffect';
 import './index.css';
+import { useAwesomeEffect } from './useAwesomeEffect';
 
 export type Node = { id: string | number };
 export type Link = { source: number; target: number };
@@ -361,3 +361,5 @@ const DefaultNodeComponent = (params: { name: string }) => {
     </div>
   );
 };
+
+export default Graph;

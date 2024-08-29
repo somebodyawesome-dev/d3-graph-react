@@ -1,14 +1,22 @@
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from 'rollup-plugin-typescript2';
-import postCSS from 'rollup-plugin-postcss';
-import terser from '@rollup/plugin-terser';
 import babel from '@rollup/plugin-babel';
+import commonjs from '@rollup/plugin-commonjs';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
+import terser from '@rollup/plugin-terser';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import postCSS from 'rollup-plugin-postcss';
+import typescript from 'rollup-plugin-typescript2';
 
 import pkg from './package.json';
-
+function injectImport() {
+  return {
+    name: 'inject-import',
+    renderChunk(code) {
+      const importStatement = `import './index.css';\n`;
+      return importStatement + code;
+    },
+  };
+}
 export default [
   {
     input: 'src/index.ts',
@@ -29,12 +37,14 @@ export default [
         tsconfig: './tsconfig.json',
       }),
       postCSS({
-        plugins: [require('tailwindcss'), require('autoprefixer')],
-        // extract: false, // Inline styles to the JS file
+        extract: true,
         minimize: true,
-        modules: false,
+        // modules: false,
         extensions: ['.css'],
+        inject: true,
+        plugins: [require('tailwindcss'), require('autoprefixer')],
       }),
+      injectImport(),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**',
@@ -54,5 +64,6 @@ export default [
       }),
     ],
     external: [...Object.keys(pkg.peerDependencies || {})],
+    treeshake: { moduleSideEffects: true },
   },
 ];
