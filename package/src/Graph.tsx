@@ -224,23 +224,6 @@ export function Graph<N extends Node, L extends Link>({
         }),
     );
   }, [graph]);
-  // useEffect(() => {
-  //   if (!simulation) return;
-  //   // synchronize event listener to simulationNodes update
-  //   simulation
-  //     .nodes(simulationNodes)
-  //     .on('tick', () => {
-  //       // force re render of component because d3.js is not suited for react
-  //       // and interanlly d3.js is changing states value every tick
-  //       forceUpdate();
-  //     })
-  //     .restart();
-  // }, [simulation]);
-  // useEffect(() => {
-  //   // update link force according to simulationLinks updates
-  //   simulation.force('link') &&
-  //     (simulation.force('link') as ForceLink<NodeType, SimulationLinkDatum<NodeType>>).links(simulationLinks);
-  // }, [simulationLinks]);
 
   return (
     <div id="container" className="w-full flex">
@@ -264,9 +247,9 @@ export function Graph<N extends Node, L extends Link>({
             const sourceNode = val.source as NodeType;
             const targetNode = val.target as NodeType;
 
-            const sourceNodeRef = nodeRefs[sourceNode.index];
-            const targetNodeRef = nodeRefs[targetNode.index];
-
+            const sourceNodeRef = nodeRefs.at(sourceNode.index);
+            const targetNodeRef = nodeRefs.at(targetNode.index);
+            if (!sourceNodeRef || !targetNodeRef) return null;
             return LinkComponent ? (
               <LinkComponent
                 link={link}
@@ -295,11 +278,6 @@ export function Graph<N extends Node, L extends Link>({
                 {NodeComponent && <NodeComponent node={node} />}
               </ForignObjectWrapper>
             );
-            // return node.isTopic ? (
-            //   <TopicNode title={node.title} ref={nodeRefs[index]} key={index} {...val} />
-            // ) : (
-            //   <MsNode title={node.title} ref={nodeRefs[index]} key={index} {...val} />
-            // );
           })}
         </g>
       </svg>

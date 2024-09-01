@@ -64,6 +64,5 @@ export default [
       }),
     ],
     external: [...Object.keys(pkg.peerDependencies || {})],
-    treeshake: { moduleSideEffects: true },
   },
 ];

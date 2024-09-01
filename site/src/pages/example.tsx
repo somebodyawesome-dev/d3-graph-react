@@ -1,6 +1,7 @@
 import { Graph, GraphType } from "d3-graph-react";
 import { useEffect, useState } from "react";
 import "./example.css";
+
 function PlayGround() {
   const [zoomScale, _setZoomScale] = useState<[number, number]>([0.5, 8]);
   const [linkForce, setLinkForce] = useState<GraphType["linkForce"]>({
@@ -42,11 +43,11 @@ function PlayGround() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row border ">
       {/* Panel for controls */}
       <div
         id="panel"
-        className="w-full md:w-1/2 flex flex-col bg-gray-900 px-4 py-2 md:py-4 md:px-6 overflow-auto"
+        className="w-full md:w-1/2 flex flex-col border-r px-4 py-2 md:py-4 md:px-6 overflow-auto"
       >
         {/* Controls for draggable */}
         <div className="mb-4">
@@ -213,15 +214,28 @@ function PlayGround() {
       <div id="nodes" className="w-full h-[50dvh]  md:w-full md:h-[80dvh] flex">
         <Graph
           graph={{
-            links: [{ source: 0, target: 1 }],
-            nodes: [{ id: 1 }, { id: 2 }, { id: 3 }],
+            links: [
+              { source: 0, target: 1 },
+              { source: 1, target: 2 },
+              { source: 1, target: 3 },
+            ],
+            nodes: [
+              { id: 1, name: "Node 1" },
+              { id: 2, name: "Node 2" },
+              { id: 3, name: "Node 3" },
+              { id: 4, name: "Node 4" },
+            ],
           }}
           isNodeDraggable={draggable}
           linkForce={linkForce}
           zoomScale={zoomScale}
           gravityForce={gravityForce}
           chargeForce={chargeForce}
-          NodeComponent={({}) => <div className="">Ba3</div>}
+          NodeComponent={({ node: { name } }) => (
+            <div className="bg-gray-400 p-2 rounded border border-white break-normal">
+              {name}
+            </div>
+          )}
           LinkComponent={({
             sourceNode,
             sourceNodeRef,
@@ -231,8 +245,8 @@ function PlayGround() {
             if (
               !sourceNode ||
               !targetNode ||
-              !sourceNodeRef.current ||
-              !targetNodeRef.current
+              !sourceNodeRef?.current ||
+              !targetNodeRef?.current
             )
               return null;
             const {
