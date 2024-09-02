@@ -6,7 +6,7 @@ import Hero from "../components/CustomHero/Hero";
 import Cards from "../components/CardsFeatures/Cards";
 import NewSection from "../components/NewSection/NewSection";
 import MarqueeDemo from "../components/TestimonialsSection/Testimonials";
-import PlayGround from "./example";
+import PlayGround from "./PlayGround";
 const Home = () => {
   return (
     <Layout

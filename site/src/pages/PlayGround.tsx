@@ -1,6 +1,6 @@
 import { Graph, GraphType } from "d3-graph-react";
 import { useEffect, useState } from "react";
-import "./example.css";
+import "./playground.css";
 
 function PlayGround() {
   const [zoomScale, _setZoomScale] = useState<[number, number]>([0.5, 8]);
@@ -232,7 +232,7 @@ function PlayGround() {
           gravityForce={gravityForce}
           chargeForce={chargeForce}
           NodeComponent={({ node: { name } }) => (
-            <div className="bg-gray-400 p-2 rounded border border-white break-normal">
+            <div className="bg-gray-400 p-2 rounded border border-white break-normal text-nowrap">
               {name}
             </div>
           )}
