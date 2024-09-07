@@ -38,11 +38,7 @@ jobs:
 
       # Lint the package
       - name: Lint package
-        run: cd package && yarn run lint
-
-      # Build the package
-      - name: Build package
-        run: yarn run build
+        run: cd package && yarn run lint && yarn run build
 
       # Build the site
       - name: Build site
