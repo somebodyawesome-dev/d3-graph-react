@@ -6,9 +6,8 @@ on:
       - "**"
 
 jobs:
-  install:
+  build:
     runs-on: ubuntu-latest
-    name: Install
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -18,24 +17,49 @@ jobs:
         with:
           node-version: 18.x
           cache: "yarn"
-      #  Install dependencies (this will install the dependencies for all workspaces)
-      - name: Install dependencies with Yarn
-        run: yarn install
-  package:
-    runs-on: ubuntu-latest
-    needs: install
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Lint
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      # Install dependencies for all workspaces
+      - name: Install Dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      # Lint the package
+      - name: Lint package
         run: cd package && yarn run lint
+
+      # Build the package
       - name: Build package
         run: yarn run build
-  site:
-    runs-on: ubuntu-latest
-    needs: install
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Build package
+
+      # Build the site
+      - name: Build site
         run: cd site && yarn run build
+      # Step 3: Cache Yarn dependencies
+      #   - name: Cache Yarn dependencies
+      #     uses: actions/cache@v3
+      #     id: yarn-cache
+      #     with:
+      #       path: |
+      #         node_modules
+      #         **/node_modules
+      #       # The hashFiles function is used to generate a unique key for the cache based on the contents of the package-lock.json file.
+      #       # This ensures that the cache is only invalidated when the dependencies of the project change.
+      #       key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+      #       # 'restore-keys' are fallback keys used if a cache miss occurs on the 'key' field. They provide a way to restore
+      #       # a cache from a previous state that doesn't match exactly with the 'key'. They are checked sequentially until a cache hit is found.
+      #       # A list of restore-keys is useful when you are restoring a cache from another branch because restore-keys can partially match cache keys.
+      #       restore-keys: |
+      #         ${{ runner.os }}-yarn-
