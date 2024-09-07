@@ -34,8 +34,8 @@ jobs:
 
       # Install dependencies for all workspaces
       - name: Install Dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        # if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --prefer-offline
 
       # Lint the package
       - name: Lint and Build package
