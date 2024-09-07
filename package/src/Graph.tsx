@@ -159,14 +159,14 @@ export function Graph<N extends Node, L extends Link>({
   // init zoom events
   useEffect(() => {
     const selector = d3Select('#container').select<SVGElement>('svg');
-    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale); //d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
+    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale); // d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
     const elementsHolder = selector.select<SVGGraphicsElement>('g');
     const onZoom = (d3Event: D3ZoomEvent<SVGElement, unknown>) => {
       const transform = d3Event.transform;
       elementsHolder.attr('transform', transform.toString());
     };
     const initZoomConfig = () => {
-      //check if there is a transform in the g tag
+      // check if there is a transform in the g tag
       let currentTransform = zoomTransform(elementsHolder.node()!);
       // if the current transform is out of zoom scale range
       // update it accordingly
