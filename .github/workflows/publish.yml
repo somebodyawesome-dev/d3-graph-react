@@ -38,6 +38,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
+          cwd: ./package
           publish: cd package && yarn run publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
