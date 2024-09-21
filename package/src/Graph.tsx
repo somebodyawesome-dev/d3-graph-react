@@ -39,6 +39,7 @@ export type GraphType<N extends Node = Node, L extends Link = Link> = {
     targetNodeRef: RefObject<HTMLDivElement>;
   }>;
   zoomScale?: [number, number];
+  onZoom?: (d3zoomEven: D3ZoomEvent<SVGElement, unknown>) => any;
   linkForce?: { strength: number; length: number };
   gravityForce?: { strength: number; center_x: number; center_y: number };
   chargeForce?: { strength: number };
@@ -53,6 +54,7 @@ export function Graph<N extends Node, L extends Link>({
   gravityForce,
   chargeForce,
   isNodeDraggable = true,
+  onZoom,
 }: GraphType<N, L>) {
   const [, forceUpdate] = useReducer((x) => !x, false);
   const { nodes, links } = graph;
@@ -161,9 +163,10 @@ export function Graph<N extends Node, L extends Link>({
     const selector = d3Select('#container').select<SVGElement>('svg');
     const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale); // d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
     const elementsHolder = selector.select<SVGGraphicsElement>('g');
-    const onZoom = (d3Event: D3ZoomEvent<SVGElement, unknown>) => {
+    const onZoomEvent = (d3Event: D3ZoomEvent<SVGElement, unknown>) => {
       const transform = d3Event.transform;
       elementsHolder.attr('transform', transform.toString());
+      onZoom?.(d3Event);
     };
     const initZoomConfig = () => {
       // check if there is a transform in the g tag
@@ -179,7 +182,7 @@ export function Graph<N extends Node, L extends Link>({
         elementsHolder.attr('transform', currentTransform.toString());
       }
       // onZoom change scale of all elements
-      zoomObject.on('zoom', onZoom);
+      zoomObject.on('zoom', onZoomEvent);
       zoomObject.transform(selector, currentTransform);
       // zoomObject.scaleTo(selector, 1);
       // avoid double click on graph to trigger zoom
