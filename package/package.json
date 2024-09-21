@@ -64,5 +64,22 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "keywords": [
+    "d3-visualization",
+    "d3js",
+    "graphs",
+    "javascript",
+    "networks",
+    "react",
+    "social-network-analysis",
+    "social-network-graph",
+    "visualization",
+    "graph-visualization",
+    "force-layout",
+    "d3-force",
+    "d3-zoom",
+    "d3 selection",
+    "typscript"
+  ]
 }
