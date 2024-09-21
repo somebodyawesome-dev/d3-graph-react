@@ -1,5 +1,15 @@
 # d3-graph-react
 
+## 1.3.0
+
+### Minor Changes
+
+- introduced onZoom prop and updateed README file
+
+### Patch Changes
+
+- added keywords to package.json
+
 ## 1.2.0
 
 ### Minor Changes
