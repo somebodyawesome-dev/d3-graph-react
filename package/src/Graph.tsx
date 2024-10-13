@@ -10,7 +10,7 @@ import { useAwesomeEffect } from './useAwesomeEffect';
 export type Node = { id: string | number };
 export type Link = { source: number; target: number };
 // node type in the simulation
-type NodeType = {
+export type NodeType = {
   index: number;
   id: string | number;
   x: number;
@@ -20,24 +20,26 @@ type NodeType = {
   fx?: number;
   fy?: number;
 };
-const DEFAULT_LINK_LENGTH = 200;
+export const DEFAULT_LINK_LENGTH = 200;
 // use this value as default don't pass value direactly into component props
 // to prevent unecessary 300 re renders C:
 const DEFAULT_ZOOM_SCALE = [0.5, 8] as [number, number];
+export type NodeComponentType<N> = React.FC<{ node: N }>;
+export type LinkComponentType<L> = React.FC<{
+  link: L;
+  sourceNode: NodeType;
+  sourceNodeRef: RefObject<HTMLDivElement>;
+  targetNode: NodeType;
+  targetNodeRef: RefObject<HTMLDivElement>;
+}>;
 export type GraphType<N extends Node = Node, L extends Link = Link> = {
   graph: {
     nodes: N[];
     links: L[];
   };
   // NodeComponent?: (node: N) => React.JSX.Element;
-  NodeComponent?: React.FC<{ node: N }>;
-  LinkComponent?: React.FC<{
-    link: L;
-    sourceNode: NodeType;
-    sourceNodeRef: RefObject<HTMLDivElement>;
-    targetNode: NodeType;
-    targetNodeRef: RefObject<HTMLDivElement>;
-  }>;
+  NodeComponent?: NodeComponentType<N>;
+  LinkComponent?: LinkComponentType<L>;
   zoomScale?: [number, number];
   onZoom?: (d3zoomEven: D3ZoomEvent<SVGElement, unknown>) => any;
   linkForce?: { strength: number; length: number };
