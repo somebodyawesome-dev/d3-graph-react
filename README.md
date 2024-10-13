@@ -62,3 +62,9 @@ const MyGraph = () => (
   />
 );
 ```
+
+### TODO
+
+- [ ] throttle simulation update
+- [ ] combine useEffects
+- [ ] memo some values e.g: selector,...
