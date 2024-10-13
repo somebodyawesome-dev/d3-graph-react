@@ -1,9 +1,10 @@
 import { drag as d3Drag } from 'd3-drag';
 import { Simulation, SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
 import { select as d3Select } from 'd3-selection';
-import { D3ZoomEvent, zoom as d3Zoom, zoomTransform } from 'd3-zoom';
+import { D3ZoomEvent } from 'd3-zoom';
 import { isEmpty } from 'lodash-es';
 import React, { ReactNode, RefObject, createRef, forwardRef, useEffect, useReducer, useRef, useState } from 'react';
+import { useZoom } from './hooks/useZoom';
 import './index.css';
 import { useAwesomeEffect } from './useAwesomeEffect';
 
@@ -70,6 +71,7 @@ export function Graph<N extends Node, L extends Link>({
   // create array of reference  to hold nodes references
   const refHolder = useRef(nodes.map((_) => createRef<HTMLDivElement>()));
   const { current: nodeRefs } = refHolder;
+  useZoom(zoomScale, onZoom);
   // init drag events
 
   useEffect(() => {
@@ -161,48 +163,7 @@ export function Graph<N extends Node, L extends Link>({
     };
   }, [simulation, linkForce, simulationNodes, simulationLinks]);
   // init zoom events
-  useEffect(() => {
-    const selector = d3Select('#container').select<SVGElement>('svg');
-    const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale); // d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
-    const elementsHolder = selector.select<SVGGraphicsElement>('g');
-    const onZoomEvent = (d3Event: D3ZoomEvent<SVGElement, unknown>) => {
-      const transform = d3Event.transform;
-      elementsHolder.attr('transform', transform.toString());
-      onZoom?.(d3Event);
-    };
-    const initZoomConfig = () => {
-      // check if there is a transform in the g tag
-      let currentTransform = zoomTransform(elementsHolder.node()!);
-      // if the current transform is out of zoom scale range
-      // update it accordingly
-      if (currentTransform.k < zoomScale[0]) {
-        currentTransform = currentTransform.scale(zoomScale[0] / currentTransform.k);
-        elementsHolder.attr('transform', currentTransform.toString());
-      }
-      if (currentTransform.k > zoomScale[1]) {
-        currentTransform = currentTransform.scale(zoomScale[1] / currentTransform.k);
-        elementsHolder.attr('transform', currentTransform.toString());
-      }
-      // onZoom change scale of all elements
-      zoomObject.on('zoom', onZoomEvent);
-      zoomObject.transform(selector, currentTransform);
-      // zoomObject.scaleTo(selector, 1);
-      // avoid double click on graph to trigger zoom
-      // for more details consult: https://github.com/danielcaldas/react-d3-graph/pull/202
-      selector.call(zoomObject).on('dblclick.zoom', null);
-    };
-    const clearZoomConfig = () => {
-      selector.on('.zoom', null); // Remove all zoom event listeners from the container
-      zoomObject.on('zoom', null); // i guess this is optional with no effect
-    };
 
-    // init configuration setup
-    initZoomConfig();
-
-    return () => {
-      clearZoomConfig();
-    };
-  }, [zoomScale]);
   useAwesomeEffect(() => {
     // map inputs to simulation nodes
     // give nodes different coordination to prevent explosion
