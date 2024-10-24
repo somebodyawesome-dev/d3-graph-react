@@ -7,6 +7,7 @@ import styles from "./Hero.module.css";
 import { useLocation, useHistory } from "@docusaurus/router";
 
 import SparklesText from "../../components/magicui/sparkles-text";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 const HeroContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "#1a1a1a",
   backgroundImage:
@@ -143,17 +144,17 @@ const Hero = () => {
       {renderStars()}
       <FloatingImages>
         <FloatingChart
-          src="/img/mars.png"
+          src={useBaseUrl("/img/mars.png")}
           alt="Floating Chart 1"
           style={{ top: "1%", left: "-2%", opacity: "0.6" }}
         />
         <FloatingChart
-          src="/img/chart2.png"
+          src={useBaseUrl("/img/chart2.png")}
           alt="Floating Chart 2"
           style={{ top: "80%", right: "0", opacity: "0.6" }}
         />
         <FloatingChart
-          src="/img/chart3.png"
+          src={useBaseUrl("/img/chart3.png")}
           alt="Floating Chart 3"
           style={{ top: "60%", left: "5%", opacity: "0.6" }}
         />

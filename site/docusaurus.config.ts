@@ -25,7 +25,7 @@ module.exports = {
   ],
   scripts: [
     // Add your custom JavaScript file path relative to the `static` directory
-    "./src/lib/custom.js",
+    // "./src/lib/custom.js",
   ],
 
   themeConfig: {
