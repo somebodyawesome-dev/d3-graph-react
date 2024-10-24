@@ -33,7 +33,9 @@ jobs:
       # Install dependencies for all workspaces
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --prefer-offline
-
+      # Lint the package
+      - name: Lint and Build package
+        run: cd package && yarn run lint && yarn run build
       # Build the site
       - name: Build site
         run: cd site && yarn run build
