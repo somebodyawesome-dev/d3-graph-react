@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/pages/index.js
-import React from "react";
 import Layout from "@theme/Layout";
 import Hero from "../components/CustomHero/Hero";
 import Cards from "../components/CardsFeatures/Cards";

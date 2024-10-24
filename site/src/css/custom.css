@@ -1,6 +1,7 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --ifm-color-primary: #252762;
   --ifm-color-primary-dark: #1b1d56;
@@ -10,7 +11,7 @@
   --transition-duration: 0.3s;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-background-color: #121212;
   --ifm-color-primary: #8a80d7;
   --ifm-color-primary-dark: #6e6bbd;
@@ -20,7 +21,7 @@
   --ifm-font-color-base: #e0e0e0;
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   --ifm-background-color: #121212;
   --ifm-color-primary: #8a80d7;
   --ifm-color-primary-dark: #6e6bbd;
@@ -35,7 +36,8 @@
   text-align: center;
   background-color: var(--ifm-color-primary-light);
   color: var(--ifm-background-color);
-  transition: background-color var(--transition-duration), color var(--transition-duration);
+  transition: background-color var(--transition-duration),
+    color var(--transition-duration);
 }
 
 .hero__title {
@@ -84,13 +86,14 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   border-radius: 8px;
-  transition: background var(--transition-duration), box-shadow var(--transition-duration);
+  transition: background var(--transition-duration),
+    box-shadow var(--transition-duration);
 }
 
-[data-theme='dark'] .card {
+[data-theme="dark"] .card {
   background: #000000;
 }
-[data-theme='light'] .footer {
+[data-theme="light"] .footer {
   background-color: black;
 }
 
@@ -135,13 +138,18 @@
   overflow: hidden; /* Ensure the pseudo-element doesn't overflow */
 }
 .navbar::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 1px; /* Height of the border */
-  background: linear-gradient(to right, black, gray, black); /* Gradient border */
+  background: linear-gradient(
+    to right,
+    black,
+    gray,
+    black
+  ); /* Gradient border */
   border-bottom-left-radius: 15px; /* Adjust radius as needed */
   border-bottom-right-radius: 15px; /* Adjust radius as needed */
   z-index: -1; /* Place the pseudo-element behind the navbar */
@@ -187,13 +195,13 @@ code {
 }
 
 table {
-  bordercollapse: 'collapse';
+  bordercollapse: "collapse";
 }
 tr {
   borderbottom: 1;
 }
 ul {
-  display: 'block';
+  display: "block";
   list-style-type: disc;
   margin-left: 1rem;
   margin-block-start: 1em;
@@ -204,5 +212,5 @@ ul {
   unicode-bidi: isolate;
 }
 li {
-  display: 'list-item';
+  display: "list-item";
 }
