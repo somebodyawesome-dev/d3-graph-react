@@ -2,7 +2,7 @@ module.exports = {
   title: "D3 JS",
   tagline: "Facilitating the use of D3-force with React and TypeScript",
   url: "https://your-site.com",
-  baseUrl: "/",
+  baseUrl: "/d3-graph-react/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/node.png",
@@ -25,7 +25,7 @@ module.exports = {
   ],
   scripts: [
     // Add your custom JavaScript file path relative to the `static` directory
-    "./src/lib/custom.js",
+    // "./src/lib/custom.js",
   ],
 
   themeConfig: {
@@ -46,7 +46,7 @@ module.exports = {
           label: "Docs",
           position: "left",
         },
-       
+
         {
           href: "https://github.com/somebodyawesome-dev/d3-graph-react",
           label: "GitHub",
