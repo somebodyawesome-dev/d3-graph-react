@@ -1,12 +1,13 @@
-import { select as d3Select } from 'd3-selection';
 import { D3ZoomEvent, zoom as d3Zoom, zoomTransform } from 'd3-zoom';
 import { useEffect } from 'react';
+import { useSelectorsContext } from './useSelectorProvider';
 
 export function useZoom(zoomScale: [number, number], onZoom?: (event: D3ZoomEvent<SVGElement, unknown>) => void) {
+  const { svgSelector, gSelector } = useSelectorsContext();
   useEffect(() => {
-    const selector = d3Select('#container').select<SVGElement>('svg');
+    const selector = svgSelector();
+    const elementsHolder = gSelector();
     const zoomObject = d3Zoom<SVGElement, unknown>().scaleExtent(zoomScale);
-    const elementsHolder = selector.select<SVGGraphicsElement>('g');
 
     const onZoomEvent = (d3Event: D3ZoomEvent<SVGElement, unknown>) => {
       const transform = d3Event.transform;
@@ -36,5 +37,5 @@ export function useZoom(zoomScale: [number, number], onZoom?: (event: D3ZoomEven
       selector.on('.zoom', null);
       zoomObject.on('zoom', null);
     };
-  }, [zoomScale, onZoom]);
+  }, [zoomScale, onZoom, svgSelector]);
 }

@@ -1,9 +1,9 @@
 import { drag as d3Drag } from 'd3-drag';
 import { Simulation, SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
-import { select as d3Select } from 'd3-selection';
 import { createRef, useEffect, useReducer, useRef, useState } from 'react';
 import { GraphType, Link, Node, NodeType } from '../Graph';
 import { useAwesomeEffect } from '../useAwesomeEffect';
+import { useSelectorsContext } from './useSelectorProvider';
 
 export function useSimulation<N extends Node, L extends Link>({
   graph,
@@ -30,9 +30,10 @@ export function useSimulation<N extends Node, L extends Link>({
   // create array of reference  to hold nodes references
   const refHolder = useRef(nodes.map((_) => createRef<HTMLDivElement>()));
   const { current: nodeRefs } = refHolder;
+  const { svgSelector } = useSelectorsContext();
   useEffect(() => {
     const customNodeDrag = d3Drag<SVGGElement, NodeType>();
-    const selector = d3Select('#container').select<SVGElement>('svg').selectAll<SVGGElement, NodeType>('.node');
+    const selector = svgSelector().selectAll<SVGGElement, NodeType>('.node');
     const graphNodeDragConfig = () => {
       if (!simulation) return;
       customNodeDrag
@@ -67,7 +68,7 @@ export function useSimulation<N extends Node, L extends Link>({
     return () => {
       clearNodeDragConfig();
     };
-  }, [isNodeDraggable, simulationNodes]);
+  }, [isNodeDraggable, simulationNodes, svgSelector]);
   useEffect(() => {
     if (!simulation) return;
     if (!chargeForce) {
