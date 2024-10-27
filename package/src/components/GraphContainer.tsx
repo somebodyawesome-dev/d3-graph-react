@@ -1,8 +1,18 @@
 import { ReactNode } from 'react';
 import { DEFAULT_LINK_LENGTH } from '../Graph';
-export const GraphContainer = ({ children }: { children: ReactNode }) => (
-  <div id="container" className="w-full flex">
-    <svg className="w-full min-h-full">
+export const GraphContainer = ({
+  children,
+  containerClassName,
+  containerId,
+  svgClassName,
+}: {
+  children: ReactNode;
+  containerId?: string;
+  containerClassName?: string;
+  svgClassName?: string;
+}) => (
+  <div id={containerId || 'container'} className={containerClassName || 'w-full flex'}>
+    <svg className={svgClassName || 'w-full min-h-full'}>
       <defs>
         <marker
           id="arrowhead"

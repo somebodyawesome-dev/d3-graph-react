@@ -65,6 +65,7 @@ const MyGraph = () => (
 
 ### TODO
 
-- [ ] throttle simulation update
-- [ ] combine useEffects
-- [ ] memo some values e.g: selector,...
+- [ ] Throttle simulation update
+- [ ] Combine useEffects
+- [ ] Memo some values e.g: selector,...
+- [ ] Add support for mobile click events
