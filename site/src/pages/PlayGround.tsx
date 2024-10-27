@@ -43,7 +43,7 @@ function PlayGround() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row border ">
+    <div className="flex flex-col md:flex-row border w-full ">
       {/* Panel for controls */}
       <div
         id="panel"
@@ -213,6 +213,8 @@ function PlayGround() {
       {/* Graph container */}
       <div id="nodes" className="w-full h-[50dvh]  md:w-full md:h-[80dvh] flex">
         <Graph
+          containerId="container-custom-id"
+          // svgClassName="hehe"
           graph={{
             links: [
               { source: 0, target: 1 },
