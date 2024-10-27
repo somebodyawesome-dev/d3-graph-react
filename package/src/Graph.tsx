@@ -3,6 +3,7 @@ import React, { RefObject } from 'react';
 import { GraphContainer } from './components/GraphContainer';
 import { LinkRenderer } from './components/LinkRenderer';
 import { NodeRenderer } from './components/NodeRenderer';
+import { SelectorsProvider } from './hooks/useSelectorProvider';
 import { useSimulation } from './hooks/useSimulation';
 import { useZoom } from './hooks/useZoom';
 import './index.css';
@@ -45,8 +46,11 @@ export type GraphType<N extends Node = Node, L extends Link = Link> = {
   gravityForce?: { strength: number; center_x: number; center_y: number };
   chargeForce?: { strength: number };
   isNodeDraggable?: boolean;
+  containerId?: string;
+  containerClassName?: string;
+  svgClassName?: string;
 };
-export function Graph<N extends Node, L extends Link>({
+function GraphComponent<N extends Node, L extends Link>({
   graph,
   LinkComponent,
   NodeComponent,
@@ -55,6 +59,9 @@ export function Graph<N extends Node, L extends Link>({
   gravityForce,
   chargeForce,
   isNodeDraggable = true,
+  containerClassName,
+  containerId,
+  svgClassName,
   onZoom,
 }: GraphType<N, L>) {
   const { nodeRefs, simulationLinks, simulationNodes } = useSimulation({
@@ -68,10 +75,18 @@ export function Graph<N extends Node, L extends Link>({
   const { nodes, links } = graph;
 
   return (
-    <GraphContainer>
+    <GraphContainer containerClassName={containerClassName} containerId={containerId} svgClassName={svgClassName}>
       <LinkRenderer links={links} simLinks={simulationLinks} nodeRefs={nodeRefs} LinkComponent={LinkComponent} />
       <NodeRenderer nodes={nodes} simNodes={simulationNodes} nodeRefs={nodeRefs} NodeComponent={NodeComponent} />
     </GraphContainer>
+  );
+}
+
+export function Graph<N extends Node, L extends Link>(props: GraphType<N, L>) {
+  return (
+    <SelectorsProvider containerId={props.containerId}>
+      <GraphComponent {...props} />
+    </SelectorsProvider>
   );
 }
 
