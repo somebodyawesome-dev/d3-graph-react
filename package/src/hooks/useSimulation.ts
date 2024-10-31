@@ -39,13 +39,10 @@ export function useSimulation<N extends Node, L extends Link>({
     const graphNodeDragConfig = () => {
       if (!simulation) return;
       function handleDragStart(ev: D3DragEvent<SVGGElement, NodeType, SubjectPosition>) {
-        console.log('start: ', ev.type, ev.sourceEvent);
-
         if (!ev.active) simulation!.alphaTarget(0.3).restart();
       }
 
       function handleDragging(ev: D3DragEvent<SVGGElement, NodeType, SubjectPosition>, d: NodeType) {
-        console.log('dragging: ', ev.type, ev.sourceEvent);
         d.x = ev.x;
         d.y = ev.y;
         d.fx = ev.x;
@@ -54,7 +51,6 @@ export function useSimulation<N extends Node, L extends Link>({
 
       function handleDragEnd(ev: D3DragEvent<SVGGElement, NodeType, SubjectPosition>, d: NodeType) {
         if (!ev.active) simulation!.alphaTarget(0);
-        console.log('end: ', ev.type, ev.sourceEvent);
         d.fx = null;
         d.fy = null;
       }
