@@ -18,8 +18,8 @@ export type NodeType = {
   y: number;
   vx: number;
   vy: number;
-  fx?: number;
-  fy?: number;
+  fx?: number | null;
+  fy?: number | null;
 };
 export const DEFAULT_LINK_LENGTH = 200;
 // use this value as default don't pass value direactly into component props
