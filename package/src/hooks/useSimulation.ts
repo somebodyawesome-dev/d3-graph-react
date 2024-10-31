@@ -1,4 +1,4 @@
-import { drag as d3Drag } from 'd3-drag';
+import { drag as d3Drag, D3DragEvent, SubjectPosition } from 'd3-drag';
 import { Simulation, SimulationLinkDatum, forceCenter, forceLink, forceManyBody, forceSimulation } from 'd3-force';
 import { createRef, useEffect, useReducer, useRef, useState } from 'react';
 import { GraphType, Link, Node, NodeType } from '../Graph';
@@ -32,35 +32,38 @@ export function useSimulation<N extends Node, L extends Link>({
   const { current: nodeRefs } = refHolder;
   const { svgSelector } = useSelectorsContext();
   useEffect(() => {
-    const customNodeDrag = d3Drag<SVGGElement, NodeType>();
+    console.log('re-render');
+
+    const dragBehavior = d3Drag<SVGGElement, NodeType>();
     const selector = svgSelector().selectAll<SVGGElement, NodeType>('.node');
     const graphNodeDragConfig = () => {
       if (!simulation) return;
-      customNodeDrag
-        .on('start', (ev) => {
-          if (!ev.active) simulation.alphaTarget(0.3).restart();
-        })
-        .on('drag', (ev, d) => {
-          const draggedNode = simulationNodes[d.index];
-          const { x, y } = ev;
-          draggedNode.x = x; // x - subject.x;
-          draggedNode.y = y; // y - subject.y;
-          draggedNode.fx = draggedNode.x;
-          draggedNode.fy = draggedNode.y;
-          setSimulationNodes([...simulationNodes]);
-        })
-        .on('end', (ev, d) => {
-          if (!ev.active) simulation.alphaTarget(0);
-          const draggedNode = simulationNodes[d.index];
-          draggedNode.fx = undefined;
-          draggedNode.fy = undefined;
-          setSimulationNodes([...simulationNodes]);
-        });
+      function handleDragStart(ev: D3DragEvent<SVGGElement, NodeType, SubjectPosition>) {
+        console.log('start: ', ev.type, ev.sourceEvent);
 
-      selector.data(simulationNodes).call(customNodeDrag);
+        if (!ev.active) simulation!.alphaTarget(0.3).restart();
+      }
+
+      function handleDragging(ev: D3DragEvent<SVGGElement, NodeType, SubjectPosition>, d: NodeType) {
+        console.log('dragging: ', ev.type, ev.sourceEvent);
+        d.x = ev.x;
+        d.y = ev.y;
+        d.fx = ev.x;
+        d.fy = ev.y;
+      }
+
+      function handleDragEnd(ev: D3DragEvent<SVGGElement, NodeType, SubjectPosition>, d: NodeType) {
+        if (!ev.active) simulation!.alphaTarget(0);
+        console.log('end: ', ev.type, ev.sourceEvent);
+        d.fx = null;
+        d.fy = null;
+      }
+      dragBehavior.on('start', handleDragStart).on('drag', handleDragging).on('end', handleDragEnd);
+
+      selector.data(simulationNodes).call(dragBehavior);
     };
     const clearNodeDragConfig = () => {
-      selector.on('mousedown.drag', null);
+      selector.on('.drag', null);
     };
 
     if (isNodeDraggable) graphNodeDragConfig();
@@ -68,7 +71,7 @@ export function useSimulation<N extends Node, L extends Link>({
     return () => {
       clearNodeDragConfig();
     };
-  }, [isNodeDraggable, simulationNodes, svgSelector]);
+  }, [isNodeDraggable, svgSelector, simulationNodes]);
   useEffect(() => {
     if (!simulation) return;
     if (!chargeForce) {
