@@ -32,7 +32,6 @@ export function useSimulation<N extends Node, L extends Link>({
   const { current: nodeRefs } = refHolder;
   const { svgSelector } = useSelectorsContext();
   useEffect(() => {
-    console.log('re-render');
 
     const dragBehavior = d3Drag<SVGGElement, NodeType>();
     const selector = svgSelector().selectAll<SVGGElement, NodeType>('.node');
