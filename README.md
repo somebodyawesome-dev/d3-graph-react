@@ -68,4 +68,4 @@ const MyGraph = () => (
 - [ ] Throttle simulation update
 - [ ] Combine useEffects
 - [ ] Memo some values e.g: selector,...
-- [ ] Add support for mobile click events
+- [x] Add support for touch events
