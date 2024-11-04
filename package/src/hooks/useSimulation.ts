@@ -32,6 +32,7 @@ export function useSimulation<N extends Node, L extends Link>({
   const { current: nodeRefs } = refHolder;
   const { svgSelector } = useSelectorsContext();
   useEffect(() => {
+    console.log('rendering');
 
     const dragBehavior = d3Drag<SVGGElement, NodeType>();
     const selector = svgSelector().selectAll<SVGGElement, NodeType>('.node');
@@ -66,7 +67,7 @@ export function useSimulation<N extends Node, L extends Link>({
     return () => {
       clearNodeDragConfig();
     };
-  }, [isNodeDraggable, svgSelector, simulationNodes]);
+  }, [isNodeDraggable, svgSelector, simulation]);
   useEffect(() => {
     if (!simulation) return;
     if (!chargeForce) {
@@ -95,6 +96,8 @@ export function useSimulation<N extends Node, L extends Link>({
     };
   }, [simulation, gravityForce]);
   useEffect(() => {
+    console.log('link force');
+
     if (!simulation) return;
     if (!linkForce) {
       simulation.force('link', null);
@@ -116,7 +119,7 @@ export function useSimulation<N extends Node, L extends Link>({
     return () => {
       simulation.force('link', null);
     };
-  }, [simulation, linkForce, simulationNodes, simulationLinks]);
+  }, [simulation, linkForce]);
   useAwesomeEffect(() => {
     // map inputs to simulation nodes
     // give nodes different coordination to prevent explosion
