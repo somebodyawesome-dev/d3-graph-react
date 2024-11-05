@@ -32,7 +32,6 @@ export function useSimulation<N extends Node, L extends Link>({
   const { current: nodeRefs } = refHolder;
   const { svgSelector } = useSelectorsContext();
   useEffect(() => {
-    console.log('rendering');
 
     const dragBehavior = d3Drag<SVGGElement, NodeType>();
     const selector = svgSelector().selectAll<SVGGElement, NodeType>('.node');
@@ -96,7 +95,6 @@ export function useSimulation<N extends Node, L extends Link>({
     };
   }, [simulation, gravityForce]);
   useEffect(() => {
-    console.log('link force');
 
     if (!simulation) return;
     if (!linkForce) {
