@@ -9,7 +9,7 @@ const Installation: React.FC = () => {
         <h1>📦 Installation</h1>
         <p>Install the library using npm:</p>
         <pre>
-          <code>npm install TBD</code>
+          <code>npm i d3-graph-react</code>
         </pre>
       </section>
     </div>
