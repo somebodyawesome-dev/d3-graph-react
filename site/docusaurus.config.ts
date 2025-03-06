@@ -50,7 +50,7 @@ module.exports = {
         },
         {
           href: "https://www.npmjs.com/package/d3-graph-react",
-          label: "FOLLOW US",
+          label: "NPM",
           position: "right",
           className: "navbar__link--external",
         },
@@ -58,7 +58,7 @@ module.exports = {
         
         {
           href: "https://github.com/somebodyawesome-dev/d3-graph-react",
-          label: "GITHUB",
+          label: "Github",
           position: "right",
         },
       ],
