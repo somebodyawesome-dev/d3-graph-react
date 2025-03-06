@@ -4,24 +4,23 @@ import React from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import styles from "./Hero.module.css";
-import { useLocation, useHistory } from "@docusaurus/router";
-
-import SparklesText from "../../components/magicui/sparkles-text";
+import { useHistory } from "@docusaurus/router";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+
 const HeroContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "#1a1a1a",
   backgroundImage:
     "linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%)",
   color: "white",
   paddingTop: theme.spacing(15),
-  paddingBottom: theme.spacing(20), // Increased paddingBottom for more height
+  paddingBottom: theme.spacing(20),
   textAlign: "center",
   position: "relative",
   overflow: "hidden",
   clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 95%)",
   boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
   display: "flex",
-  flexDirection: "column", // Align items vertically
+  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
   height: "100dvh",
@@ -74,7 +73,7 @@ const AnimatedText = styled(Typography)(({ theme }) => ({
     },
   },
   "&:hover": {
-    color: "#ff6f61", // Change color on hover
+    color: "#ff6f61",
     transition: "color 0.3s ease-in-out",
   },
 }));
@@ -83,7 +82,7 @@ const SubText = styled(Typography)(({ theme }) => ({
   fontFamily: "Roboto, sans-serif",
   fontSize: "1.5rem",
   marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(12), // Increased marginBottom for more space between text and button
+  marginBottom: theme.spacing(12),
   opacity: 0.9,
   animation: "fadeIn 1s ease-in-out",
   "@keyframes fadeIn": {
@@ -108,7 +107,7 @@ const FloatingImages = styled(Box)(({ theme }) => ({
 
 const FloatingChart = styled("img")(({ theme }) => ({
   position: "absolute",
-  width: "150px", // Adjust size as needed
+  width: "150px",
   animation: "floatUpDown 8s ease-in-out infinite alternate",
   "@keyframes floatUpDown": {
     "0%": {
@@ -149,16 +148,20 @@ const Hero = () => {
           style={{ top: "1%", left: "-2%", opacity: "0.6" }}
         />
         <FloatingChart
-          src={useBaseUrl("/img/chart2.png")}
-          alt="Floating Chart 2"
-          style={{ top: "80%", right: "0", opacity: "0.6" }}
-        />
-        <FloatingChart
           src={useBaseUrl("/img/chart3.png")}
           alt="Floating Chart 3"
           style={{ top: "60%", left: "5%", opacity: "0.6" }}
         />
       </FloatingImages>
+
+      {/* Flèche pour défiler vers le bas, masquée sur petits écrans */}
+      <FloatingChart
+        src={useBaseUrl("/img/arrow-down.svg")}
+        alt="Scroll Down"
+        className={styles.arrowDown}
+        onClick={() => window.scrollBy({ top: window.innerHeight, behavior: "smooth" })}
+      />
+
       <Container maxWidth="md">
         <AnimatedText variant="h2" gutterBottom>
           D3 JS Package
@@ -167,7 +170,6 @@ const Hero = () => {
           Your go-to library for D3 with React and TypeScript
         </SubText>
         <div className={styles.btncontainer} style={{ marginTop: "auto" }}>
-          {/* Added marginTop: 'auto' to push the button to the bottom */}
           <button
             className={styles.btn}
             type="button"

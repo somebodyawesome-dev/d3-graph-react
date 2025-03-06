@@ -1,0 +1,180 @@
+/* Fond principal - Évite le blanc */
+.intro-wrapper {
+    background: linear-gradient(135deg,  #291d46, #5e3b76); 
+    color: #ecf0f1;
+    padding: 60px 10%;
+    border-radius: 12px;
+  }
+  
+  /*Style des sections */
+  .intro-section {
+    margin-bottom: 50px;
+    padding: 30px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1); 
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  /* Effet au survol */
+  .intro-section:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /*Titres */
+.intro-wrapper h1, 
+.intro-wrapper h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #ffffff;
+    text-transform: uppercase;
+    border-left: 5px solid #f39c12;
+    padding-left: 12px;
+}
+  
+  /* Texte */
+  p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #d1d8e0;
+  }
+  
+  /*Liste des fonctionnalités */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  ul li {
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  ul li:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Bouton CTA */
+  .btn-primary {
+    display: inline-block;
+    background: #f39c12;
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s ease-in-out;
+    margin-top: 15px;
+  }
+  
+  .btn-primary:hover {
+    background: #e67e22;
+  }
+  
+
+
+
+  /* Appliquer uniquement à la page Graph */
+.graph-page .intro-wrapper {
+  background: linear-gradient(135deg, #291d46, #5e3b76);
+  color: #ecf0f1;
+  padding: 60px 10%;
+  border-radius: 12px;
+}
+
+/* Style des sections */
+.graph-page .intro-section {
+  margin-bottom: 50px;
+  padding: 30px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Effet au survol */
+.graph-page .intro-section:hover {
+  transform: scale(1.02);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Titres ajustés */
+.graph-page .intro-wrapper h1 {
+  font-size: 22px; /* Réduction de la taille du h1 */
+  margin-bottom: 12px;
+  color: #ffffff;
+  text-transform: uppercase;
+  border-left: 5px solid #f39c12;
+  padding-left: 12px;
+}
+
+.graph-page .intro-wrapper h2 {
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #ffffff;
+  text-transform: uppercase;
+  border-left: 5px solid #f39c12;
+  padding-left: 12px;
+}
+
+/* Texte */
+.graph-page p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #d1d8e0;
+}
+
+/* Champs d'entrée plus espacés */
+.graph-page input {
+  margin-bottom: 15px; /* Augmente l'espacement entre les champs */
+  margin-left: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Liste des fonctionnalités */
+.graph-page ul {
+  list-style: none;
+  padding: 0;
+}
+
+.graph-page ul li {
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 10px 0; /* Espacement légèrement augmenté */
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.3s ease-in-out;
+}
+
+.graph-page ul li:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Bouton CTA */
+.graph-page .btn-primary {
+  display: inline-block;
+  background: #f39c12;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease-in-out;
+  margin-top: 15px;
+}
+
+.graph-page .btn-primary:hover {
+  background: #e67e22;
+}
+

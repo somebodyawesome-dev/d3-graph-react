@@ -6,8 +6,8 @@ module.exports = {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/node.png",
-  organizationName: "somebodyawesome-dev", // Usually your GitHub org/user name.
-  projectName: "d3-graph-react", // Usually your repo name.
+  organizationName: "somebodyawesome-dev",
+  projectName: "d3-graph-react",
   headTags: [
     {
       tagName: "link",
@@ -23,18 +23,15 @@ module.exports = {
       type: "text/css",
     },
   ],
-  scripts: [
-    // Add your custom JavaScript file path relative to the `static` directory
-    // "./src/lib/custom.js",
-  ],
+  scripts: [],
 
   themeConfig: {
     colorMode: {
-      disableSwitch: true, // This disables the theme toggle button
+      disableSwitch: true,
     },
     navbar: {
       style: "dark",
-      title: "d3-graph-react",
+      title: "D3-GRAPH-REACT",
       logo: {
         alt: "d3-graph-react Logo",
         src: "img/nodes.png",
@@ -43,13 +40,25 @@ module.exports = {
         {
           to: "docs/Introduction",
           activeBasePath: "docs",
-          label: "Docs",
+          label: "DOCUMENTS",
           position: "left",
         },
-
+        {
+          to: "docs/Playground",
+          label: "PLAYGROUND",
+          position: "left",
+        },
+        {
+          href: "https://www.npmjs.com/package/d3-graph-react",
+          label: "FOLLOW US",
+          position: "right",
+          className: "navbar__link--external",
+        },
+        
+        
         {
           href: "https://github.com/somebodyawesome-dev/d3-graph-react",
-          label: "GitHub",
+          label: "GITHUB",
           position: "right",
         },
       ],
@@ -61,10 +70,10 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
+          breadcrumbs: false, 
           editUrl:
             "https://github.com/somebodyawesome-dev/d3-graph-react/tree/main/site/",
         },
-
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },

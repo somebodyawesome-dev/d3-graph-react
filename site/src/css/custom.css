@@ -214,3 +214,83 @@ ul {
 li {
   display: "list-item";
 }
+/* l'icone de git est aligné */
+.navbar__link[href*="github.com"] {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar__link[href*="github.com"]::after {
+  content: none !important; 
+}
+
+/*Couleur de fond de la sidebar */
+:root {
+  --ifm-sidebar-background-color: #0d0d0d; /* Change cette couleur selon ton design */
+  --ifm-menu-color: #ffffff; /* Couleur des liens */
+  --ifm-menu-color-active: #cca633; /* Couleur du lien actif */
+  --ifm-menu-link-hover-color: #cca633; /* Couleur du lien au survol */
+}
+
+/*Mode sombre (dark mode) */
+[data-theme="dark"] {
+  --ifm-sidebar-background-color: #121212; /* Fond plus foncé pour le dark mode */
+  --ifm-menu-color: #e0e0e0; /* Texte en gris clair */
+  --ifm-menu-color-active: #121212; /* Lien actif en violet clair */
+  --ifm-menu-link-hover-color: #121212; /* Survol en bleu clair */
+}
+
+/* Sidebar styling */
+.theme-doc-sidebar-container {
+  background-color: var(--ifm-sidebar-background-color) !important;
+}
+
+/* Style des liens */
+.theme-doc-sidebar-item-link {
+  color: var(--ifm-menu-color) !important;
+  font-weight: 500;
+}
+
+/* Style du lien actif */
+.theme-doc-sidebar-item-link--active {
+  color: var(--ifm-menu-color-active) !important;
+  font-weight: bold;
+}
+
+/* Style du lien au survol */
+.theme-doc-sidebar-item-link:hover {
+  color: var(--ifm-menu-link-hover-color) !important;
+}
+
+/*  Style des catégories */
+.theme-doc-sidebar-item-category {
+  color: var(--ifm-menu-color) !important;
+  font-weight: 600;
+}
+
+/*  Couleur du bouton d'expansion des catégories */
+.theme-doc-sidebar-item-category:hover {
+  color: var(--ifm-menu-link-hover-color) !important;
+}
+
+/* Bordure des éléments actifs */
+.theme-doc-sidebar-item-link--active::before {
+  content: "●";
+  color: var(--ifm-menu-color-active);
+  margin-right: 5px;
+}
+
+
+.navbar__link--external {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar__link--external::after {
+  margin-left: 5px; /* Espace entre le texte et l'icône */
+  vertical-align: middle; /* Alignement vertical */
+}
+
+
+
+
