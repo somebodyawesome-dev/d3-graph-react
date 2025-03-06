@@ -11,7 +11,7 @@ const LinkForcePage: React.FC = () => {
         <section className="intro-section">
           <h1>🔗 LinkForce</h1>
           <p>
-            <code>linkForce</code> est une prop optionnelle qui configure la force et la longueur des liens.
+            <code>linkForce</code> Is an optional prop that configures the strength and length of the links.
           </p>
           <br />
           {/* Example Usage */}

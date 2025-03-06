@@ -11,8 +11,7 @@ const ZoomScalePage: React.FC = () => {
         <section className="intro-section">
           <h1>🔍 ZoomScale</h1>
           <p>
-            <code>zoomScale</code> définit les limites de zoom du graphe. La valeur par défaut est <code>[0.5, 8]</code>.
-          </p>
+          <code>zoomScale</code> defines the zoom limits of the graph. The default value is <code>[0.5, 8]</code>.          </p>
           <br />
           {/* Example Usage */}
           <h2>📌 Example Usage</h2>
