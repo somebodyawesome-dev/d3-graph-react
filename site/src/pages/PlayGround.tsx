@@ -38,7 +38,7 @@ function PlayGround() {
         
         {/* Panneau de contrôle */}
         <div className="w-full md:w-1/3 flex flex-col border-r px-4 py-2 overflow-auto">
-          <h3 className="text-lg font-semibold mb-2">Paramètres</h3>
+          <h3 className="text-lg font-semibold mb-2">Configurations</h3>
 
           {/* Draggable */}
           <div className="mb-4">
