@@ -173,3 +173,38 @@ strong {
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
 }
+
+@keyframes glideUpDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px); 
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.arrowDown {
+  position: fixed !important; 
+  bottom: 50px; 
+  right: 50px;
+  opacity: 0.9;
+  cursor: pointer;
+  z-index: 9999; 
+  animation: glideUpDown 0.2s infinite ease-in-out; 
+  will-change: transform; 
+  pointer-events: auto; 
+}
+@media (max-width: 768px) {
+  .arrowDown {
+    display: none !important;
+  }
+}
+
+
+
+
+
+
