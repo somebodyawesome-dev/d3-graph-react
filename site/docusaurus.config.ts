@@ -44,7 +44,7 @@ module.exports = {
           position: "left",
         },
         {
-          to: "playground",
+          to: "docs/Playground",
           label: "PLAYGROUND",
           position: "left",
         },
