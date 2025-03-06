@@ -11,7 +11,7 @@ const NodeComponentPage: React.FC = () => {
         <section className="intro-section">
           <h1>📍 NodeComponent</h1>
           <p>
-            <code>NodeComponent</code> est une prop optionnelle qui permet de personnaliser l'affichage des nœuds dans le graphe.
+            <code>NodeComponent</code> Is an optional prop that allows customizing the display of nodes in the graph.
           </p>
           <br />
           {/* Example Usage */}

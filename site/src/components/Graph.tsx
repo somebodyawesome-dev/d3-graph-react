@@ -2,11 +2,11 @@ import React from "react";
 import { Graph, GraphType } from "d3-graph-react";
 import { useEffect, useState } from "react";
 import "./Global.css";
-import "../pages/playground.css"; // Assurez-vous que le fichier CSS existe
+import "../pages/playground.css"; 
 
 const GraphPage: React.FC = () => {
   return (
-    <div className="graph-page"> {/* Ajout de la classe ici */}
+    <div className="graph-page"> 
       <div className="intro-wrapper">
         {/* Section Graph */}
         <section className="intro-section">

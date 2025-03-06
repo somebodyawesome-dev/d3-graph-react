@@ -133,7 +133,7 @@
 
 /* Champs d'entrée plus espacés */
 .graph-page input {
-  margin-bottom: 15px; /* Augmente l'espacement entre les champs */
+  margin-bottom: 15px;
   margin-left: 10px;
   padding: 10px;
   border-radius: 6px;
@@ -149,7 +149,7 @@
 .graph-page ul li {
   font-size: 16px;
   background: rgba(255, 255, 255, 0.2);
-  margin: 10px 0; /* Espacement légèrement augmenté */
+  margin: 10px 0;
   padding: 12px;
   border-radius: 6px;
   font-weight: 500;

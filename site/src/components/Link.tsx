@@ -11,7 +11,7 @@ const LinkComponentPage: React.FC = () => {
         <section className="intro-section">
           <h1>🔗 LinkComponent</h1>
           <p>
-            <code>LinkComponent</code> permet de personnaliser l'affichage des liens entre les nœuds du graphe.
+            <code>LinkComponent</code> Allows customizing the display of links between the graph nodes.
           </p>
           <br />
           {/* Example Usage */}

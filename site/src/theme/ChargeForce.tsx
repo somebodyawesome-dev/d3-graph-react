@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Graph } from "d3-graph-react";
-import "./Global.css";
+import "../components/Global.css";
 import "../pages/playground.css";
 
 const ChargeForcePage: React.FC = () => {
@@ -11,8 +11,8 @@ const ChargeForcePage: React.FC = () => {
         <section className="intro-section">
           <h1>⚡ ChargeForce</h1>
           <p>
-            <code>chargeForce</code> permet de configurer la force de charge. 
-            Une valeur négative **repousse** les nœuds, tandis qu'une valeur positive les **attire**.
+          <code>chargeForce</code> allows configuring the charge force.  
+          A negative value **repels** the nodes, while a positive value **attracts** them.
           </p>
           <br />
           {/* Example Usage */}
