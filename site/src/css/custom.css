@@ -287,10 +287,29 @@ li {
 }
 
 .navbar__link--external::after {
-  margin-left: 5px; /* Espace entre le texte et l'icône */
-  vertical-align: middle; /* Alignement vertical */
+  margin-left: 5px; 
+  vertical-align: middle; 
 }
 
+/* ajustement des icons de navbar */
+.navbar__link--npm::before {
+  content: "";
+  display: inline-block;
+  background: url('/img/npm-icon.svg') no-repeat center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
 
-
-
+.navbar__link--github::before {
+  content: "";
+  display: inline-block;
+  background: url('/img/github-icon.svg') no-repeat center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
