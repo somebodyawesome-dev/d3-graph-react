@@ -11,8 +11,7 @@ const GravityForcePage: React.FC = () => {
         <section className="intro-section">
           <h1>🌍 GravityForce</h1>
           <p>
-            <code>gravityForce</code> est une prop optionnelle qui configure la gravité avec <code>strength</code>, <code>center_x</code> et <code>center_y</code>.
-          </p>
+          <code>gravityForce</code> is an optional prop that configures gravity using <code>strength</code>, <code>center_x</code>, and <code>center_y</code>.          </p>
           <br />
           {/* Example Usage */}
           <h2>📌 Example Usage</h2>

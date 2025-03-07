@@ -5,7 +5,7 @@ import Cards from "../components/CardsFeatures/Cards";
 import Footer from "../components/FooterSection/footer";
 import NewSection from "../components/NewSection/NewSection";
 import MarqueeDemo from "../components/TestimonialsSection/Testimonials";
-import PlayGround from "./PlayGround";
+import PlayGround from "../theme/Playground";
 const Home = () => {
   return (
     <Layout

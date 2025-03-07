@@ -1,5 +1,7 @@
+console.log("InstallationComponent chargé !");
+
 import React from "react";
-import "./Global.css"; 
+import "../components/Global.css";
 
 const Installation: React.FC = () => {
   return (
