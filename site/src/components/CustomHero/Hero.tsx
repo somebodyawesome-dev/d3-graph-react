@@ -159,15 +159,17 @@ const Hero = () => {
         src={useBaseUrl("/img/arrow-down.svg")}
         alt="Scroll Down"
         className={styles.arrowDown}
-        onClick={() => window.scrollBy({ top: window.innerHeight, behavior: "smooth" })}
+        onClick={() =>
+          window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
+        }
       />
 
       <Container maxWidth="md">
         <AnimatedText variant="h2" gutterBottom>
-          D3 JS Package
+          D3 Graph React
         </AnimatedText>
         <SubText variant="h5" gutterBottom>
-          Your go-to library for D3 with React and TypeScript
+          Your go-to library for d3-force with React and TypeScript
         </SubText>
         <div className={styles.btncontainer} style={{ marginTop: "auto" }}>
           <button

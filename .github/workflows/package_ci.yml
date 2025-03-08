@@ -1,13 +1,17 @@
-name: CI
+name: Package CI
 
 on:
   push:
     branches:
-      - "**"
+      - main
+    
+  pull_request:
+    paths-ignore: 
+      - "site/**"
   workflow_dispatch:
 
 jobs:
-  build:
+  build-package:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -32,14 +36,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # Install dependencies for all workspaces
+      # Install dependencies
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --prefer-offline
 
-      # Lint the package
+      # Lint and Build package
       - name: Lint and Build package
         run: cd package && yarn run lint && yarn run build
-
-      # Build the site
-      - name: Build site
-        run: cd site && yarn run build
