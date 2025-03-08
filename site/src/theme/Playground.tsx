@@ -3,7 +3,9 @@ import { Graph, GraphType } from "d3-graph-react";
 import "../pages/playground.css";
 
 function PlayGround() {
-  const [zoomScale, _setZoomScale] = useState<[number, number]>([0.5, 8]);
+  const [selectedExample, setSelectedExample] = useState("enterpriseNetwork");
+  const [zoomScale, setZoomScale] = useState<[number, number]>([0.5, 8]);
+  const [draggable, setDraggable] = useState(true);
   const [linkForce, setLinkForce] = useState<GraphType["linkForce"]>({
     length: 200,
     strength: 1,
@@ -16,218 +18,244 @@ function PlayGround() {
   const [chargeForce, setChargeForce] = useState<GraphType["chargeForce"]>({
     strength: -10,
   });
-  const [draggable, setDraggable] = useState(true);
 
   useEffect(() => {
     function handleResize() {
-      // Update size-related state if needed
-      // Example: _setZoomScale([updatedMinZoom, updatedMaxZoom]);
-
-      // Adjust Gravity Force for phone mode
       if (window.innerWidth <= 640) {
         setGravityForce({ center_x: 150, center_y: 150, strength: 0.05 });
       } else {
         setGravityForce({ center_x: 200, center_y: 200, strength: 0.05 });
       }
     }
-
-    // Initial call to handleResize
     handleResize();
-
-    // Attach resize listener
     window.addEventListener("resize", handleResize);
-    return () => {
-      // Cleanup: remove resize listener
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Différents types de graphes
+  const graphExamples = {
+     enterpriseNetwork : {
+      nodes: [
+        { id: 0, name: "Central Server" },
+        { id: 1, name: "IT Department" },
+        { id: 2, name: "HR Department" },
+        { id: 3, name: "Finance Department" },
+        { id: 4, name: "Marketing Department" },
+        { id: 5, name: "Customer Support" },
+        { id: 6, name: "Database" },
+        { id: 7, name: "Cloud Storage" },
+        { id: 8, name: "Firewall" },
+        { id: 9, name: "WiFi" },
+        { id: 10, name: "Employees" },
+      ],
+      links: [
+        { source: 9, target: 0 }, 
+        { source: 10, target: 9 }, 
+        { source: 0, target: 1 }, 
+        { source: 0, target: 2 }, 
+        { source: 0, target: 3 },  
+        { source: 0, target: 4 },  
+        { source: 0, target: 5 },  
+        { source: 0, target: 6 },  
+        { source: 0, target: 7 },  
+        { source: 0, target: 8 },  
+      ],
+    },
+    
+    connectedCities: {
+      nodes: [
+        { id: 1, name: "Tunis" },
+        { id: 2, name: "Sousse" },
+        { id: 3, name: "Monastir" },
+        { id: 4, name: "Gabès" },
+        { id: 5, name: "Sfax" },
+        { id: 6, name: "Kairouan" },
+        { id: 7, name: "Djerba" },
+        { id: 8, name: "Bizerte" },
+        { id: 9, name: "Tozeur" },
+      ],
+      links: [
+        { source: 0, target: 1 },
+        { source: 1, target: 2 },
+        { source: 2, target: 3 },
+        { source: 3, target: 4 },
+        { source: 4, target: 5 },
+        { source: 5, target: 6 },
+        { source: 6, target: 7 },
+        { source: 7, target: 8 },
+        { source: 8, target: 0 },
+      ],
+    },
+   connectedStates : {
+      nodes: [
+        { id: 1, name: "USA" },
+        { id: 2, name: "NY" },
+        { id: 3, name: "Albany" },
+        { id: 4, name: "TX" },
+        { id: 5, name: "Dallas" },
+        { id: 6, name: "El Paso" },
+        { id: 7, name: "Austin" },
+        { id: 8, name: "Houston" },
+        { id: 9, name: "AL" },
+        { id: 10, name: "Jackson" },
+        { id: 11, name: "Montgomery" },
+        { id: 12, name: "Madison" },
+        { id: 13, name: "CT" },
+        { id: 14, name: "Hartford" },
+        { id: 15, name: "CO" },
+        { id: 16, name: "Cheyenne" },
+        { id: 17, name: "Denver" },
+      ],
+      links: [
+        { source: 0, target: 1 }, 
+        { source: 1, target: 2 }, 
+        { source: 0, target: 3 }, 
+        { source: 3, target: 4 }, 
+        { source: 3, target: 5 }, 
+        { source: 3, target: 6 }, 
+        { source: 3, target: 7 }, 
+        { source: 0, target: 8 }, 
+        { source: 8, target: 9 }, 
+        { source: 8, target: 10 }, 
+        { source: 8, target: 11 }, 
+        { source: 0, target: 12 }, 
+        { source: 12, target: 13 }, 
+        { source: 0, target: 14 }, 
+        { source: 14, target: 15 }, 
+        { source: 14, target: 16 }, 
+      ],
+    },
+    securityNetwork : {
+      nodes: [
+        { id: 1, name: "User" },
+        { id: 2, name: "User" },
+        { id: 3, name: "User" },
+        { id: 4, name: "Home" },
+        { id: 5, name: "Mobile" },
+        { id: 6, name: "Security" },
+        { id: 7, name: "Report" },
+        { id: 8, name: "Business" },
+        { id: 9, name: "Store" },
+        { id: 10, name: "Analytics" },
+        { id: 11, name: "Tape Storage" },
+        { id: 12, name: "Customer Support" },
+        { id: 13, name: "Storage" },
+      ],
+      links: [
+        { source: 0, target: 5 },  
+        { source: 1, target: 5 },  
+        { source: 2, target: 5 },  
+        { source: 3, target: 5 },  
+        { source: 4, target: 5 },  
+        { source: 5, target: 6 }, 
+        { source: 5, target: 7 },  
+        { source: 5, target: 8 },  
+        { source: 5, target: 9 },  
+        { source: 9, target: 10 }, 
+        { source: 5, target: 11 }, 
+        { source: 5, target: 12 }, 
+      ],
+    }    
+  };
+  
+
+  const [nodeNames, setNodeNames] = useState(
+    graphExamples[selectedExample].nodes.map((n) => n.name)
+  );
+
+  useEffect(() => {
+    setNodeNames(graphExamples[selectedExample].nodes.map((n) => n.name));
+  }, [selectedExample]);
+
+  const handleNodeNameChange = (index: number, newName: string) => {
+    const updatedNames = [...nodeNames];
+    updatedNames[index] = newName;
+    setNodeNames(updatedNames);
+  };
+
+  const graphData = {
+    nodes: graphExamples[selectedExample].nodes.map((n, index) => ({
+      ...n,
+      name: nodeNames[index],
+    })),
+    links: graphExamples[selectedExample].links,
+  };
+
   return (
-    <div className="flex flex-col md:flex-row border w-full ">
-      {/* Panel for controls */}
-      <div
-        id="panel"
-        className="w-full md:w-1/2 flex flex-col border-r px-4 py-2 md:py-4 md:px-6 overflow-auto"
-      >
-        {/* Controls for draggable */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Node:</h3>
-          <div className="flex items-center gap-2">
-            <input
-              onChange={() => setDraggable(!draggable)}
-              type="checkbox"
-              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-              checked={draggable}
-            />
-            <span className="text-sm">Draggable</span>
+    <div className="flex flex-col md:flex-row border w-full">
+      {/* Panel des contrôles */}
+      <div id="panel" className="w-full md:w-1/3 flex flex-col border-r px-4 py-2 overflow-auto">
+        <h3 className="text-lg font-semibold mb-2">Exemples :</h3>
+        <select
+          value={selectedExample}
+          onChange={(e) => setSelectedExample(e.target.value)}
+          className="input w-full input-bordered py-1 px-2"
+        >
+          <option value="enterpriseNetwork">Enterprise Network</option>
+          <option value="connectedCities">Connected Cities</option>
+          <option value="connectedStates">States and Cities</option>
+          <option value="securityNetwork">Security and Storage</option>
+        </select>
+
+        {/* Contrôles */}
+        <div className="mt-4">
+          <label className="flex items-center">
+            <input type="checkbox" onChange={() => setDraggable(!draggable)} checked={draggable} />
+            <span className="ml-2">Draggable</span>
+          </label>
+        </div>
+
+        {/* Zoom Scale */}
+        <h3 className="text-lg font-semibold mt-4">Zoom Scale</h3>
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="block text-sm mb-1">Minimum</label>
+            <input type="number" value={zoomScale[0]} className="input w-full" readOnly />
+          </div>
+          <div>
+            <label className="block text-sm mb-1">Maximum</label>
+            <input type="number" value={zoomScale[1]} className="input w-full" readOnly />
           </div>
         </div>
 
-        {/* Controls for zoom scale */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Zoom Scale</h3>
-          <div className="flex flex-row justify-between items-center gap-2">
-            <div className="flex-1">
-              <label className="block text-sm mb-1">Minimum</label>
-              <input
-                type="text"
-                placeholder="Minimum Value"
-                defaultValue={"0.5"}
-                className="input w-full input-bordered py-1 px-2"
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value)) {
-                    _setZoomScale([value, zoomScale[1]]);
-                  }
-                }}
-              />
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm mb-1">Maximum</label>
-              <input
-                type="text"
-                placeholder="Maximum Value"
-                defaultValue={"8"}
-                className="input w-full input-bordered py-1 px-2"
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value)) {
-                    _setZoomScale([zoomScale[0], value]);
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Controls for link force */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Link Force</h3>
-          <div className="flex flex-row justify-between items-center gap-2">
-            <div className="flex-1">
-              <label className="block text-sm mb-1">Length</label>
-              <input
-                type="text"
-                placeholder="Length Value"
-                defaultValue={"200"}
-                className="input w-full input-bordered py-1 px-2"
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value)) {
-                    setLinkForce({ ...linkForce, length: value });
-                  }
-                }}
-              />
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm mb-1">Strength</label>
-              <input
-                type="text"
-                placeholder="Strength Value"
-                defaultValue={"1"}
-                className="input w-full input-bordered py-1 px-2"
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value)) {
-                    setLinkForce({ ...linkForce, strength: value });
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Controls for gravity force */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Gravity Force</h3>
-          <div className="flex flex-row justify-between items-center gap-2">
-            <div className="flex-1">
-              <label className="block text-sm mb-1">X</label>
-              <input
-                type="text"
-                defaultValue={gravityForce.center_x}
-                className="input w-full input-bordered py-1 px-2"
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value)) {
-                    setGravityForce({ ...gravityForce, center_x: value });
-                  }
-                }}
-              />
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm mb-1">Y</label>
-              <input
-                type="text"
-                defaultValue={gravityForce.center_y}
-                className="input w-full input-bordered py-1 px-2"
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value)) {
-                    setGravityForce({ ...gravityForce, center_y: value });
-                  }
-                }}
-              />
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm mb-1">Strength</label>
-              <input
-                type="text"
-                placeholder="Strength Value"
-                defaultValue={gravityForce.strength}
-                className="input w-full input-bordered py-1 px-2"
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value)) {
-                    setGravityForce({ ...gravityForce, strength: value });
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Controls for charge force */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Charge Force</h3>
-          <div className="flex flex-row justify-between items-center gap-2">
-            <div className="flex-1">
-              <label className="block text-sm mb-1">Strength</label>
-              <input
-                type="text"
-                placeholder="Strength Value"
-                defaultValue={chargeForce.strength}
-                className="input w-full input-bordered py-1 px-2"
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value)) {
-                    setChargeForce({ strength: value });
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        {/* Link Force */}
+        <h3 className="text-lg font-semibold mt-4">Link Force</h3>
+         <div className="grid grid-cols-2 gap-2">
+       <div>
+       <label className="block text-sm mb-1">Length</label>
+       <input type="number" value={linkForce.length} className="input w-full" readOnly />
+       </div>
+       <div>
+        <label className="block text-sm mb-1">Strength</label>
+        <input type="number" value={linkForce.strength} className="input w-full" readOnly />
+       </div>
+      </div>
+     {/* Gravity Force */}
+      <h3 className="text-lg font-semibold mt-4">Gravity Force</h3>
+      <div className="grid grid-cols-3 gap-2">
+      <div>
+      <label className="block text-sm mb-1">X</label>
+      <input type="number" value={gravityForce.center_x} className="input w-full" readOnly />
+      </div>
+      <div>
+      <label className="block text-sm mb-1">Y</label>
+      <input type="number" value={gravityForce.center_y} className="input w-full" readOnly />
+      </div>
+      <div>
+       <label className="block text-sm mb-1">Z</label>
+       <input type="number" value={gravityForce.strength} className="input w-full" readOnly />
+      </div>
+      </div>
+        {/* Charge Force */}
+        <h3 className="text-lg font-semibold mt-4">Charge Force</h3>
+        <input type="number" value={chargeForce.strength} className="input w-full" readOnly />
       </div>
 
-      {/* Graph container */}
-      <div id="nodes" className="w-full h-[50dvh]  md:w-full md:h-[80dvh] flex">
+      {/* Affichage du graphe */}
+      <div id="nodes" className="w-full md:w-2/3 h-[80dvh] flex">
         <Graph
           containerId="container-custom-id"
-          // svgClassName="hehe"
-          graph={{
-            links: [
-              { source: 0, target: 1 },
-              { source: 1, target: 2 },
-              { source: 1, target: 3 },
-            ],
-            nodes: [
-              { id: 1, name: "Node 1" },
-              { id: 2, name: "Node 2" },
-              { id: 3, name: "Node 3" },
-              { id: 4, name: "Node 4" },
-            ],
-          }}
+          graph={graphData}
           isNodeDraggable={draggable}
           linkForce={linkForce}
           zoomScale={zoomScale}
@@ -238,42 +266,6 @@ function PlayGround() {
               {name}
             </div>
           )}
-          LinkComponent={({
-            sourceNode,
-            sourceNodeRef,
-            targetNode,
-            targetNodeRef,
-          }) => {
-            if (
-              !sourceNode ||
-              !targetNode ||
-              !sourceNodeRef?.current ||
-              !targetNodeRef?.current
-            )
-              return null;
-            const {
-              offsetWidth: sourceOffsetWidth,
-              offsetHeight: sourceOffsetHeight,
-            } = sourceNodeRef.current!;
-            const {
-              offsetWidth: targetOffsetWidth,
-              offsetHeight: targetOffsetHeight,
-            } = targetNodeRef.current!;
-            return (
-              <path
-                className="link"
-                fill="none"
-                markerEnd="url(#arrowhead)"
-                d={`M ${sourceNode.x + sourceOffsetWidth / 2},${
-                  sourceNode.y + sourceOffsetHeight / 2
-                } L ${targetNode.x + targetOffsetWidth / 2} ${
-                  targetNode.y + targetOffsetHeight / 2
-                }`}
-                stroke={"gray"}
-                strokeWidth={1}
-              ></path>
-            );
-          }}
         />
       </div>
     </div>
