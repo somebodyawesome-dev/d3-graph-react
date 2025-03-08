@@ -11,9 +11,10 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build-site:
     runs-on: ubuntu-latest
-
+   
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -40,7 +41,9 @@ jobs:
       # Install dependencies
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --prefer-offline
-
+      # Lint and Build package
+      - name: Lint and Build package
+        run: cd package && yarn run lint && yarn run build
       # Build the site
       - name: Build site
         run: cd site && yarn run build
