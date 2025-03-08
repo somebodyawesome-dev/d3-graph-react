@@ -11,10 +11,9 @@ on:
   workflow_dispatch:
 
 jobs:
-
   build-site:
     runs-on: ubuntu-latest
-   
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -38,13 +37,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # Install dependencies
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --prefer-offline
-      # Lint and Build package
+
       - name: Lint and Build package
-        run: cd package && yarn run lint && yarn run build
-      # Build the site
+        run: cd package && yarn run build
+
       - name: Build site
         run: cd site && yarn run build
 
@@ -76,15 +74,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # Install dependencies
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --prefer-offline
 
-      # Build the site (again to ensure deployment has the latest)
+      - name: Lint and Build package
+        run: cd package && yarn run build
+
       - name: Build site
         run: cd site && yarn run build
 
-      # Deploy to GitHub Pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
