@@ -1,5 +1,5 @@
 module.exports = {
-  title: "D3 JS",
+  title: "d3-graph-react",
   tagline: "Facilitating the use of D3-force with React and TypeScript",
   url: "https://your-site.com",
   baseUrl: "/d3-graph-react/",
@@ -48,15 +48,13 @@ module.exports = {
           label: "PLAYGROUND",
           position: "left",
         },
-        
         {
           href: "https://www.npmjs.com/package/d3-graph-react",
           label: "NPM",
           position: "right",
           className: " navbar__link--npm navbar__link--external",
         },
-        
-        
+
         {
           href: "https://github.com/somebodyawesome-dev/d3-graph-react",
           label: "Github",
@@ -72,7 +70,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          breadcrumbs: false, 
+          breadcrumbs: false,
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
