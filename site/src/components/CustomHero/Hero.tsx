@@ -175,7 +175,7 @@ const Hero = () => {
           <button
             className={styles.btn}
             type="button"
-            onClick={() => history.push("/docs/Introduction")}
+            onClick={() => history.push("docs/Introduction")}
           >
             <strong>Get Started</strong>
             <div id={styles.containerstars}>
