@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
 import Layout from "@theme/Layout";
 import { Graph, GraphType } from "d3-graph-react";
+import { useEffect, useState } from "react";
 import "./playground.css";
 
 function PlayGround() {
@@ -33,9 +33,8 @@ function PlayGround() {
   }, []);
 
   return (
-    <Layout title="Playground"> 
+    <Layout title="Playground">
       <div className="flex flex-col md:flex-row border w-full p-4">
-        
         {/* Panneau de contrôle */}
         <div className="w-full md:w-1/3 flex flex-col border-r px-4 py-2 overflow-auto">
           <h3 className="text-lg font-semibold mb-2">Configurations</h3>
@@ -60,14 +59,18 @@ function PlayGround() {
               type="number"
               value={zoomScale[0]}
               className="input w-full"
-              onChange={(e) => setZoomScale([parseFloat(e.target.value), zoomScale[1]])}
+              onChange={(e) =>
+                setZoomScale([parseFloat(e.target.value), zoomScale[1]])
+              }
             />
             <label className="block text-sm mb-2 mt-2">Zoom Maximum</label>
             <input
               type="number"
               value={zoomScale[1]}
               className="input w-full"
-              onChange={(e) => setZoomScale([zoomScale[0], parseFloat(e.target.value)])}
+              onChange={(e) =>
+                setZoomScale([zoomScale[0], parseFloat(e.target.value)])
+              }
             />
           </div>
 
@@ -79,14 +82,24 @@ function PlayGround() {
               type="number"
               value={linkForce.length}
               className="input w-full"
-              onChange={(e) => setLinkForce({ ...linkForce, length: parseFloat(e.target.value) })}
+              onChange={(e) =>
+                setLinkForce({
+                  ...linkForce,
+                  length: parseFloat(e.target.value),
+                })
+              }
             />
             <label className="block text-sm mb-2 mt-2">Strength</label>
             <input
               type="number"
               value={linkForce.strength}
               className="input w-full"
-              onChange={(e) => setLinkForce({ ...linkForce, strength: parseFloat(e.target.value) })}
+              onChange={(e) =>
+                setLinkForce({
+                  ...linkForce,
+                  strength: parseFloat(e.target.value),
+                })
+              }
             />
           </div>
         </div>
@@ -124,7 +137,12 @@ function PlayGround() {
               targetNode,
               targetNodeRef,
             }) => {
-              if (!sourceNode || !targetNode || !sourceNodeRef?.current || !targetNodeRef?.current)
+              if (
+                !sourceNode ||
+                !targetNode ||
+                !sourceNodeRef?.current ||
+                !targetNodeRef?.current
+              )
                 return null;
               const {
                 offsetWidth: sourceOffsetWidth,
