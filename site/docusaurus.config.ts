@@ -17,12 +17,6 @@ module.exports = {
       },
     },
   ],
-  stylesheets: [
-    {
-      href: "/css/tailwind.css",
-      type: "text/css",
-    },
-  ],
   scripts: [],
 
   themeConfig: {
