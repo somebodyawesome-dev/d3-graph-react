@@ -67,7 +67,8 @@ const NodeComponentPlayground: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row border w-full">
+    <div  className="flex justify-center items-center min-h-screen p-6 pg-section">
+    <div className="flex flex-col md:flex-row border w-full bg-black rounded-xl">
       {/* Panneau de configuration */}
       <div id="panel" className="w-full md:w-1/2 flex flex-col border-r px-4 py-4">
         <h2>🎮 Playground</h2>
@@ -98,6 +99,7 @@ const NodeComponentPlayground: React.FC = () => {
           gravityForce={{ center_x: 200, center_y: 200, strength: 0.05 }}
         />
       </div>
+    </div>
     </div>
   );
 };

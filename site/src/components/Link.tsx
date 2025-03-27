@@ -3,8 +3,8 @@ import { Graph } from "d3-graph-react";
 import "./Global.css";
 import "../pages/playground.css";
 
-const nodeWidth = 60; // Largeur des nœuds
-const nodeHeight = 40; // Hauteur réduite des nœuds
+const nodeWidth = 60; 
+const nodeHeight = 40; 
 
 const LinkComponentPage: React.FC = () => {
   return (
@@ -72,7 +72,8 @@ const LinkComponentPlayground: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row border w-full">
+    <div  className="flex justify-center items-center min-h-screen p-6 pg-section">
+    <div className="flex flex-col md:flex-row border w-full bg-black rounded-xl">
       <div id="panel" className="w-full md:w-1/2 flex flex-col border-r px-4 py-4">
         <h2>🎮 Playground</h2>
         <div className="mb-4">
@@ -126,6 +127,7 @@ const LinkComponentPlayground: React.FC = () => {
           )}
         />
       </div>
+    </div>
     </div>
   );
 };

@@ -15,23 +15,11 @@ const nodes: Node[] = [
   { id: 0, name: "Product Owner", type: "main", size: 140, color: "#FFD788" },
   { id: 1, name: "Dev Team", type: "department", size: 110, color: "#1e90ff" },
   { id: 2, name: "QA Team", type: "department", size: 110, color: "#9c27b0" },
-  {
-    id: 3,
-    name: "DevOps Team",
-    type: "department",
-    size: 110,
-    color: "#4db6ac",
-  },
+  { id: 3, name: "DevOps Team", type: "department", size: 110, color: "#4db6ac" },
   { id: 4, name: "Frontend Dev", type: "team", size: 90, color: "#ffcc00" },
   { id: 5, name: "Backend Dev", type: "team", size: 90, color: "#ff7043" },
   { id: 6, name: "Mobile Dev", type: "team", size: 90, color: "#26a69a" },
-  {
-    id: 7,
-    name: "Automated Testing",
-    type: "team",
-    size: 90,
-    color: "#ab47bc",
-  },
+  { id: 7, name: "Automated Testing", type: "team", size: 90, color: "#ab47bc" },
   { id: 8, name: "Manual Testing", type: "team", size: 90, color: "#8e24aa" },
   { id: 9, name: "CI/CD", type: "team", size: 90, color: "#78909c" },
   { id: 10, name: "Infrastructure", type: "team", size: 90, color: "#ff1744" },
@@ -49,10 +37,9 @@ const links: Link[] = [
   { source: 3, target: 9 },
   { source: 3, target: 10 },
 ];
-const DepartmentNode = ({ node }: { node: Node }) => {
-  if (!node || !node.type) {
-    return null;
-  }
+
+const DepartmentNode = ({ node }: { node: any }) => {
+  if (!node || !node.type) return null;
 
   const isOval = node.type === "team";
 
@@ -82,9 +69,11 @@ const DepartmentNode = ({ node }: { node: Node }) => {
           width: "100%",
         }}
       >
-        {node.name || node.type}
+        {node.name}
       </div>
     </div>
   );
 };
-export { nodes, links };
+
+
+export { nodes, links, DepartmentNode };

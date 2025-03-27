@@ -81,8 +81,9 @@ const PlayGround: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row border w-full">
-      {/* Panneau de configuration */}
+    <div  className="flex justify-center items-center min-h-screen p-6 pg-section">
+    <div className="flex flex-col md:flex-row border w-full bg-black rounded-xl">
+{/* Panneau de configuration */}
       <div id="panel" className="w-full md:w-1/2 flex flex-col border-r px-4 py-2 md:py-4 md:px-6 overflow-auto">
         <h2>🎮 Playground</h2>
 
@@ -184,6 +185,7 @@ const PlayGround: React.FC = () => {
           }}
         />
       </div>
+    </div>
     </div>
   );
 };

@@ -313,3 +313,26 @@ li {
   margin-right: 5px;
   vertical-align: middle;
 }
+
+.container,
+.row {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.col.docItemCol {
+  display: none !important;
+}
+
+.playgroundContainer {
+  width: 97vw;
+  height: 85vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: black;
+}
+
+

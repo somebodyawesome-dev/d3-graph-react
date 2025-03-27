@@ -1,6 +1,6 @@
 /* Fond principal - Évite le blanc */
 .intro-wrapper {
-    background: linear-gradient(135deg,  #291d46, #5e3b76); 
+    
     color: #ecf0f1;
     padding: 60px 10%;
     border-radius: 12px;
@@ -11,7 +11,7 @@
     margin-bottom: 50px;
     padding: 30px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1); 
+    background: linear-gradient(135deg,  #5e3b76, #cba7e2); 
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
@@ -83,7 +83,6 @@
 
   /* Appliquer uniquement à la page Graph */
 .graph-page .intro-wrapper {
-  background: linear-gradient(135deg, #291d46, #5e3b76);
   color: #ecf0f1;
   padding: 60px 10%;
   border-radius: 12px;
@@ -94,9 +93,15 @@
   margin-bottom: 50px;
   padding: 30px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg,  #5e3b76, #cba7e2);
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.pg-section{
+  background: linear-gradient(135deg,  #cba7e2, #5e3b76);
+  border-radius: 10px;
+
 }
 
 /* Effet au survol */
@@ -177,4 +182,10 @@
 .graph-page .btn-primary:hover {
   background: #e67e22;
 }
+
+.pagination-nav {
+  margin-bottom: 50px; /* ou 3rem, ou ce que tu veux */
+}
+
+
 

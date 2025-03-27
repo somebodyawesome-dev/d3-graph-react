@@ -66,7 +66,6 @@ const Cards = () => {
             />
             <div className={styles.heading}>{card.title}</div>
             <div className={styles.icons}>
-              {/* Icons or additional content can be added here */}
             </div>
           </div>
         ))}
