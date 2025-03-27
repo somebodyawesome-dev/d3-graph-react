@@ -4,7 +4,6 @@ type RelationshipType = "Dated" | "Married" | "Engaged" | "Hookup/Fling";
 interface Character {
   id: number;
   name: string;
- 
   image: string;
 }
 

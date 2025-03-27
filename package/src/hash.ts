@@ -6,7 +6,7 @@ export function constantHash(arg: any): string {
   const isDate = constructor === Date;
 
   if (Object(arg) === arg && !isDate && constructor !== RegExp) {
-    let existing = table.get(arg);
+    const existing = table.get(arg);
     if (existing) return existing;
 
     let result = ++counter + '~';

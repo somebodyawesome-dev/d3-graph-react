@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Graph, GraphType } from "d3-graph-react";
-import { characters, relationships } from "../examples/theoffice";
+import { characters, relationships } from "../examples/theoffice/theoffice";
 import { nodes as departmentNodes, links as departmentLinks, DepartmentNode } from "../examples/department";
+import CharacterNode from "../examples/theoffice/CharacterNode";
 import "../pages/playground.css";
-import useBaseUrl from "@docusaurus/useBaseUrl";
 
 interface GraphNode {
   id: number;
@@ -13,6 +13,26 @@ interface GraphNode {
   size?: number;
   color?: string;
 }
+
+const CustomLink = ({ sourceNode, sourceNodeRef, targetNode, targetNodeRef, link }: any) => {
+  if (!sourceNode || !targetNode || !sourceNodeRef?.current || !targetNodeRef?.current) return null;
+
+  const { offsetWidth: sw, offsetHeight: sh } = sourceNodeRef.current!;
+  const { offsetWidth: tw, offsetHeight: th } = targetNodeRef.current!;
+
+  return (
+    <path
+      d={`M ${sourceNode.x + sw / 2},${sourceNode.y + sh / 2} 
+          L ${targetNode.x + tw / 2} ${targetNode.y + th / 2}`}
+      stroke={link?.color || "gray"}
+      strokeWidth={2}
+      strokeDasharray={link?.type === "Hookup/Fling" ? "5,3" : undefined}
+      fill="none"
+      markerEnd="url(#arrowhead)" 
+    />
+  );
+};
+
 
 function Playground() {
   const [selectedExample, setSelectedExample] = useState("department");
@@ -45,32 +65,6 @@ function Playground() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const ImageNode = ({ node }: { node: GraphNode }) => {
-    return (
-      <div
-        style={{
-          width: 80,
-          height: 80,
-          borderRadius: "50%",
-          overflow: "hidden",
-          border: "3px solid white",
-          backgroundColor: "#fff",
-          boxShadow: "0 0 5px rgba(0,0,0,0.4)",
-        }}
-      >
-        <img
-          src={useBaseUrl(`/img/theoffice/${node.image}`)}
-          alt={node.name}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
-      </div>
-    );
-  };
-
   const indexedCharacters = characters.map((char, index) => ({
     ...char,
     index,
@@ -102,75 +96,18 @@ function Playground() {
       nodes: mappedNodes,
       links: departmentLinks,
       nodeComponent: DepartmentNode,
-      
     };
   }
    else {
     graphData = {
       nodes: indexedCharacters,
       links: indexedRelationships,
-      nodeComponent: ImageNode,
+      linkComponent: CustomLink,
+      nodeComponent: CharacterNode,
     };
   }
 
   const [graphKey, setGraphKey] = useState(0);
-  useEffect(() => {
-    setGraphKey((prev) => prev + 1);
-  }, [zoomMin, zoomMax, linkForce.strength]);
-
-  useEffect(() => {
-    if (selectedExample !== "theoffice") return;
-  
-    const observer = new MutationObserver(() => {
-      const svg = document.getElementById("container-custom-id")?.querySelector("svg");
-      if (!svg) return;
-  
-      let defs = svg.querySelector("defs");
-      if (!defs) {
-        defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-        svg.insertBefore(defs, svg.firstChild);
-      }
-  
-      let marker = svg.querySelector("#arrowhead");
-      if (!marker) {
-        marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
-        marker.setAttribute("id", "arrowhead");
-        marker.setAttribute("viewBox", "0 -5 10 10");
-        marker.setAttribute("refX", "15"); 
-        marker.setAttribute("refY", "0");
-        marker.setAttribute("markerWidth", "2");
-        marker.setAttribute("markerHeight", "2");
-        marker.setAttribute("orient", "auto");
-        marker.innerHTML = `<path d="M0,-5L10,0L0,5" fill="white"/>`;
-        defs.appendChild(marker);
-      }
-  
-      const paths = svg.querySelectorAll("path");
-      indexedRelationships.forEach((rel, i) => {
-        const path = paths[i] as SVGPathElement;
-        if (path) {
-          path.setAttribute("stroke", rel.color);
-          path.setAttribute("stroke-width", "2");
-
-          path.removeAttribute("marker-end");
-  
-          if (rel.type === "Hookup/Fling") {
-            path.setAttribute("stroke-dasharray", "5,3");
-          } else {
-            path.removeAttribute("stroke-dasharray");
-          }
-        }
-      });
-    });
-  
-    const target = document.getElementById("container-custom-id");
-    if (target) {
-      observer.observe(target, { childList: true, subtree: true });
-    }
-  
-    return () => observer.disconnect();
-  }, [selectedExample, graphKey]);
-  
   
   return (
     <div className="flex flex-col md:flex-row border w-full bg-black text-white">
@@ -318,6 +255,7 @@ function Playground() {
           gravityForce={gravityForce}
           chargeForce={chargeForce}
           NodeComponent={graphData.nodeComponent}
+          LinkComponent={graphData.linkComponent}
         />
       </div>
     </div>
