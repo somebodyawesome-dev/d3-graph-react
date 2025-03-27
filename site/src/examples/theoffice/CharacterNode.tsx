@@ -14,8 +14,8 @@ const CharacterNode = ({ node }: { node: GraphNode }) => {
   return (
     <div
       style={{
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
         borderRadius: "50%",
         overflow: "hidden",
         border: "3px solid white",

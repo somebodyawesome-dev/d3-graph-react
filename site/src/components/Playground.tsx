@@ -5,15 +5,6 @@ import { nodes as departmentNodes, links as departmentLinks, DepartmentNode } fr
 import CharacterNode from "../examples/theoffice/CharacterNode";
 import "../pages/playground.css";
 
-interface GraphNode {
-  id: number;
-  name: string;
-  type: "main" | "department" | "team" | string;
-  image?: string;
-  size?: number;
-  color?: string;
-}
-
 const CustomLink = ({ sourceNode, sourceNodeRef, targetNode, targetNodeRef, link }: any) => {
   if (!sourceNode || !targetNode || !sourceNodeRef?.current || !targetNodeRef?.current) return null;
 
@@ -27,15 +18,14 @@ const CustomLink = ({ sourceNode, sourceNodeRef, targetNode, targetNodeRef, link
       stroke={link?.color || "gray"}
       strokeWidth={2}
       strokeDasharray={link?.type === "Hookup/Fling" ? "5,3" : undefined}
-      fill="none"
-      markerEnd="url(#arrowhead)" 
+      fill="none" 
     />
   );
 };
 
 
 function Playground() {
-  const [selectedExample, setSelectedExample] = useState("department");
+  const [selectedExample, setSelectedExample] = useState("theoffice");
   const [zoomMin, setZoomMin] = useState(0.5);
   const [zoomMax, setZoomMax] = useState(8);
   const [draggable, setDraggable] = useState(true);
@@ -111,15 +101,15 @@ function Playground() {
   
   return (
     <div className="flex flex-col md:flex-row border w-full bg-black text-white">
-      <div className="md:w-[50%] flex flex-col border-r px-4 py-2 overflow-auto bg-black">
+      <div className="md:w-[34%] flex flex-col border-r px-4 py-2 overflow-auto bg-black">
         <h3 className="text-lg font-semibold mb-2">Exemple Graphique :</h3>
         <select
           className="bg-black text-white border border-gray-600 rounded px-2 py-1"
           value={selectedExample}
           onChange={(e) => setSelectedExample(e.target.value)}
         >
-          <option value="department">Agile Organization</option>
           <option value="theoffice">Relationships in The Office</option>
+          <option value="department">Agile Organization</option>
         </select>
 
         <div className="mt-4 border-t pt-2">
@@ -222,22 +212,22 @@ function Playground() {
         {selectedExample === "theoffice" && (
           <div className="mt-4 px-3 py-1 rounded bg-black text-white text-xs shadow  self-start border border-white">
             <h4 className="font-semibold mb-1 text-xs">Legend</h4>
-            <ul className="flex gap-3 items-center">
+            <ul className="flex gap-1 items-center">
               <li className="flex items-center gap-1">
                 <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: "#e91e63" }}></span>
-                <span>Married</span>
+                <span className="text-xs">Married</span>
               </li>
               <li className="flex items-center gap-1">
                 <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: "#2196f3" }}></span>
-                <span>Engaged</span>
+                <span className="text-xs">Engaged</span>
               </li>
               <li className="flex items-center gap-1">
                 <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: "#4caf50" }}></span>
-                <span>Dated</span>
+                <span className="text-xs">Dated</span>
               </li>
               <li className="flex items-center gap-1">
                 <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: "#ff9800" }}></span>
-                <span>Hookup / Fling</span>
+                <span className="text-xs">Hookup / Fling</span>
               </li>
             </ul>
           </div>
