@@ -7,6 +7,13 @@
 - added new props to graph component
 - added support for touche events
 
+## 1.2.0
+
+### Minor Changes
+
+- added new props to graph component
+- added support for touche events
+
 ## 1.1.3
 
 ### Minor Changes
