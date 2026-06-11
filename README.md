@@ -40,6 +40,11 @@ npm i d3-graph-react
 - `gravityForce`: Optional. Configures the gravity force with strength, center_x, and center_y.
 - `chargeForce`: Optional. Configures the charge force with strength.
 - `isNodeDraggable`: Optional. Enables or disables node dragging. Default is true.
+- `ambientAlphaTarget`: Optional. Keeps the simulation gently floating forever instead of settling to rest. Default is 0 (standard d3 behavior: animate, then settle). Values around 0.02–0.1 give a nice ambient motion at the cost of permanent CPU usage.
+- `onSimulationCreated`: Optional. Called once per simulation instance with the underlying d3 force simulation, for imperative control (reheat, stop, read positions, add custom forces).
+- `onZoom`: Optional. Called with the d3 zoom event whenever the graph is zoomed or panned.
+
+The simulation settles to rest after animating and automatically reheats when you drag a node or change a force prop.
 
 ### Example Usage:
 

@@ -22,8 +22,9 @@ const sidebars: SidebarsConfig = {
         { type: 'doc', id: 'Props/zoomScale', label: 'ZoomScale' },
         { type: 'doc', id: 'Props/linkForce', label: 'LinkForce' },
         { type: 'doc', id: 'Props/gravityForce', label: 'GravityForce' },
-        { type: 'doc', id: 'Props/chargeForce', label: 'ChargeForce' }, 
-      
+        { type: 'doc', id: 'Props/chargeForce', label: 'ChargeForce' },
+        { type: 'doc', id: 'Props/ambientAlphaTarget', label: 'AmbientAlphaTarget' },
+        { type: 'doc', id: 'Props/onSimulationCreated', label: 'OnSimulationCreated' },
       ],
     },
   ],
