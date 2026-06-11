@@ -1,40 +1,40 @@
-const table = new WeakMap<object, string>();
-let counter = 0;
-export function constantHash(arg: any): string {
+export function constantHash(arg: any, seen?: Map<object, string>): string {
   const type = typeof arg;
   const constructor = arg && arg.constructor;
-  const isDate = constructor === Date;
 
-  if (Object(arg) === arg && !isDate && constructor !== RegExp) {
-    const existing = table.get(arg);
-    if (existing) return existing;
+  if (constructor === Date) return arg.toJSON();
 
-    let result = ++counter + '~';
-    table.set(arg, result); 
+  if (Object(arg) === arg && constructor !== RegExp) {
+    // the map is a per-call cycle guard only: hashes are recomputed on every
+    // call so in-place mutations of the input are detected. Placeholders are
+    // visit-order based, which keeps cyclic structures hashing stably.
+    if (!seen) seen = new Map();
+    const placeholder = seen.get(arg);
+    if (placeholder !== undefined) return placeholder;
+    seen.set(arg, '$' + seen.size + '~');
 
     if (constructor === Array) {
-      result = '@'; 
+      let result = '@';
       for (const item of arg) {
-        result += constantHash(item) + ','; 
+        result += constantHash(item, seen) + ',';
       }
-      table.set(arg, result);
+      return result;
     }
 
-    else if (constructor === Object) {
-      result = '#'; 
-      const keys = Object.keys(arg).sort(); 
+    if (constructor === Object) {
+      let result = '#';
+      const keys = Object.keys(arg).sort();
       for (const key of keys) {
         if (arg[key] !== undefined) {
-          result += key + ':' + constantHash(arg[key]) + ','; 
+          result += key + ':' + constantHash(arg[key], seen) + ',';
         }
       }
-      table.set(arg, result);
+      return result;
     }
 
-    return result;
+    // class instances, functions, RegExp-likes: stringify
+    return String(arg);
   }
-
-  if (isDate) return arg.toJSON();
 
   if (type === 'symbol') return arg.toString();
 
