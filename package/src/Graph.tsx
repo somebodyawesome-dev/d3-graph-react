@@ -1,3 +1,4 @@
+import { Simulation, SimulationLinkDatum } from 'd3-force';
 import { D3ZoomEvent } from 'd3-zoom';
 import React, { RefObject } from 'react';
 import { GraphContainer } from './components/GraphContainer';
@@ -46,6 +47,14 @@ export type GraphType<N extends Node = Node, L extends Link = Link> = {
   gravityForce?: { strength: number; center_x: number; center_y: number };
   chargeForce?: { strength: number };
   isNodeDraggable?: boolean;
+  /**
+   * Keeps the simulation gently running forever instead of settling to rest.
+   * 0 (default) = standard d3 behavior: the graph animates then settles.
+   * Small values like 0.05 reproduce a perpetual "floating" motion.
+   */
+  ambientAlphaTarget?: number;
+  /** Called once per simulation instance, right after it is created. */
+  onSimulationCreated?: (simulation: Simulation<NodeType, SimulationLinkDatum<NodeType>>) => void;
   containerId?: string;
   containerClassName?: string;
   svgClassName?: string;
@@ -59,6 +68,8 @@ function GraphComponent<N extends Node, L extends Link>({
   gravityForce,
   chargeForce,
   isNodeDraggable = true,
+  ambientAlphaTarget,
+  onSimulationCreated,
   containerClassName,
   containerId,
   svgClassName,
@@ -70,6 +81,8 @@ function GraphComponent<N extends Node, L extends Link>({
     gravityForce,
     chargeForce,
     isNodeDraggable,
+    ambientAlphaTarget,
+    onSimulationCreated,
   });
   useZoom(zoomScale, onZoom);
   const { nodes, links } = graph;
