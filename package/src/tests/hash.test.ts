@@ -17,12 +17,11 @@ describe('constantHash()', () => {
   it('should handle arrays', () => {
     expect(constantHash([1, 2, 3])).toBe('@1,2,3,');
   });
-  
 
   it('should hash objects with sorted keys', () => {
     const a = { b: 2, a: 1 };
     const b = { a: 1, b: 2 };
-    expect(constantHash(a)).toBe(constantHash(b)); 
+    expect(constantHash(a)).toBe(constantHash(b));
   });
 
   it('should generate stable hashes for the same object reference', () => {
@@ -43,5 +42,31 @@ describe('constantHash()', () => {
     const obj1 = { x: { y: 1 } };
     const obj2 = { x: { y: 1 } };
     expect(constantHash(obj1)).toBe(constantHash(obj2));
+  });
+
+  it('should produce a new hash after an in-place mutation', () => {
+    const obj = { nodes: [1, 2] };
+    const before = constantHash(obj);
+    obj.nodes.push(3);
+    expect(constantHash(obj)).not.toBe(before);
+    obj.nodes.pop();
+    expect(constantHash(obj)).toBe(before);
+  });
+
+  it('should produce a new hash when a nested value changes', () => {
+    const graph = { nodes: [{ id: 'a' }], links: [] as any[] };
+    const before = constantHash(graph);
+    graph.nodes[0].id = 'b';
+    expect(constantHash(graph)).not.toBe(before);
+  });
+
+  it('should hash cyclic structures stably across calls and references', () => {
+    const a: any = { name: 'a' };
+    a.self = a;
+    expect(constantHash(a)).toBe(constantHash(a));
+
+    const b: any = { name: 'a' };
+    b.self = b;
+    expect(constantHash(b)).toBe(constantHash(a));
   });
 });
