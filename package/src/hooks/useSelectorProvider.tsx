@@ -1,14 +1,15 @@
-import { BaseType, Selection } from 'd3-selection';
-import { createContext, FC, ReactNode, useContext, useMemo } from 'react';
+import { Selection } from 'd3-selection';
+import { createContext, FC, ReactNode, RefObject, useContext, useId, useMemo, useRef } from 'react';
 
 import { select as d3Select } from 'd3-selection';
 
 export type ISelectorsContext = {
-  containerSelector: () => Selection<BaseType, unknown, HTMLElement, any>;
-  svgSelector: () => Selection<SVGElement, unknown, HTMLElement, any>;
-  gSelector: () => Selection<SVGGraphicsElement, unknown, HTMLElement, any>;
+  containerRef: RefObject<HTMLDivElement>;
+  markerId: string;
+  containerSelector: () => Selection<HTMLDivElement | null, unknown, null, undefined>;
+  svgSelector: () => Selection<SVGElement, unknown, null, undefined>;
+  gSelector: () => Selection<SVGGraphicsElement, unknown, null, undefined>;
 };
-const DEFAULT_CONTAINER_ID = 'container';
 
 export const SelectorsContext = createContext<ISelectorsContext | null>(null);
 export const useSelectorsContext = () => {
@@ -19,14 +20,17 @@ export const useSelectorsContext = () => {
   return value;
 };
 
-export const SelectorsProvider: FC<{ children: ReactNode; containerId?: string }> = ({ children, containerId }) => {
-  const containerSelector = useMemo(() => () => d3Select(`#${containerId || DEFAULT_CONTAINER_ID}`), [containerId]);
-  const svgSelector = useMemo(() => () => containerSelector().select<SVGElement>('svg'), [containerSelector]);
-  const gSelector = useMemo(() => () => svgSelector().select<SVGGraphicsElement>('g'), [svgSelector]);
+// selections are derived from a ref instead of a document-wide id lookup so
+// multiple Graph instances on the same page don't grab each other's DOM
+export const SelectorsProvider: FC<{ children: ReactNode; containerId?: string }> = ({ children }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const markerId = 'arrowhead-' + useId().replace(/:/g, '');
+  const value = useMemo<ISelectorsContext>(() => {
+    const containerSelector = () => d3Select(containerRef.current);
+    const svgSelector = () => containerSelector().select<SVGElement>('svg');
+    const gSelector = () => svgSelector().select<SVGGraphicsElement>('g');
+    return { containerRef, markerId, containerSelector, svgSelector, gSelector };
+  }, [markerId]);
 
-  return (
-    <SelectorsContext.Provider value={{ containerSelector, svgSelector, gSelector }}>
-      {children}
-    </SelectorsContext.Provider>
-  );
+  return <SelectorsContext.Provider value={value}>{children}</SelectorsContext.Provider>;
 };

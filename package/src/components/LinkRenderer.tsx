@@ -1,5 +1,6 @@
 import { SimulationLinkDatum } from 'd3-force';
 import { Link, LinkComponentType, NodeType } from '../Graph';
+import { useSelectorsContext } from '../hooks/useSelectorProvider';
 
 export const LinkRenderer = <L extends Link>({
   simLinks,
@@ -52,6 +53,7 @@ export const DefaultLinkComponent: LinkComponentType<any> = ({
   targetNode,
   targetNodeRef,
 }) => {
+  const { markerId } = useSelectorsContext();
   if (!sourceNode || !targetNode || !sourceNodeRef.current || !targetNodeRef.current) return null;
   const { offsetWidth: sourceOffsetWidth, offsetHeight: sourceOffsetHeight } = sourceNodeRef.current;
   const { offsetWidth: targetOffsetWidth, offsetHeight: targetOffsetHeight } = targetNodeRef.current;
@@ -59,7 +61,7 @@ export const DefaultLinkComponent: LinkComponentType<any> = ({
     <path
       className="link"
       fill="none"
-      markerEnd="url(#arrowhead)"
+      markerEnd={`url(#${markerId})`}
       d={`M ${sourceNode.x + sourceOffsetWidth / 2},${sourceNode.y + sourceOffsetHeight / 2} L ${
         targetNode.x + targetOffsetWidth / 2
       } ${targetNode.y + targetOffsetHeight / 2}`}
