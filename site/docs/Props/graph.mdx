@@ -1,9 +1,90 @@
 ---
 title: graph
 sidebar_label: graph
-hide_title: true
+description: The graph prop — nodes and links arrays that describe your network.
 ---
 
-import GraphComponent from "@site/src/components/Graph";
+import { BasicGraphDemo } from "@site/src/components/demos/PropDemos";
 
-<GraphComponent />
+# `graph`
+
+The only **required** prop. It describes your network as two arrays:
+
+```ts
+type GraphData = {
+  nodes: Array<{ id: string | number } & YourNodeData>;
+  links: Array<{ source: number; target: number } & YourLinkData>;
+};
+```
+
+```tsx
+const data = {
+  nodes: [{ id: "a" }, { id: "b" }, { id: "c" }],
+  links: [
+    { source: 0, target: 1 }, // a — b
+    { source: 1, target: 2 }, // b — c
+  ],
+};
+
+<Graph graph={data} chargeForce={{ strength: -200 }} />;
+```
+
+<BasicGraphDemo />
+
+## Nodes
+
+Every node needs an `id` (string or number). Beyond that, attach whatever data your
+[`NodeComponent`](./NodeComponent) needs — names, images, colors, whole objects:
+
+```tsx
+const nodes = [
+  { id: 1, name: "Michael Scott", title: "Regional Manager", avatar: "/img/michael.png" },
+  { id: 2, name: "Dwight Schrute", title: "Assistant to the Regional Manager" },
+];
+```
+
+## Links
+
+:::warning source and target are array indices
+`source: 0, target: 1` connects `nodes[0]` to `nodes[1]` — the **positions in the array**, not
+the `id` values. This is the most common source of confusion when wiring up real data.
+:::
+
+Like nodes, links accept extra fields, which your [`LinkComponent`](./LinkComponent) receives —
+useful for styling by relationship type:
+
+```tsx
+const links = [
+  { source: 0, target: 1, kind: "reports-to" },
+  { source: 0, target: 2, kind: "mentors" },
+];
+```
+
+## Linking by id
+
+If your data references nodes by id (as most APIs do), convert it once before rendering:
+
+```tsx
+const byId = new Map(rawNodes.map((node, index) => [node.id, index]));
+
+const links = rawLinks.map((link) => ({
+  ...link,
+  source: byId.get(link.source),
+  target: byId.get(link.target),
+}));
+```
+
+## Updating the data
+
+The simulation is rebuilt when the `graph` object changes, so treat it immutably — create a new
+object instead of mutating the arrays in place:
+
+```tsx
+const [data, setData] = useState(initialData);
+
+const addNode = (node) =>
+  setData((prev) => ({
+    nodes: [...prev.nodes, node],
+    links: [...prev.links, { source: 0, target: prev.nodes.length }],
+  }));
+```

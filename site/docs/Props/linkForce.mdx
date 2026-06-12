@@ -1,9 +1,41 @@
 ---
 title: linkForce
 sidebar_label: linkForce
-hide_title: true
+description: Pull linked nodes toward a target distance from each other.
 ---
 
-import LinkForceComponent from "@site/src/components/LinkForce";
+import { LinkForceDemo } from "@site/src/components/demos/PropDemos";
 
-<LinkForceComponent />
+# `linkForce`
+
+Acts like a spring along every link: connected nodes are pulled together (or pushed apart)
+until they sit roughly `length` pixels from each other.
+
+```tsx
+<Graph
+  graph={data}
+  linkForce={{ length: 130, strength: 1 }}
+/>
+```
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `length` | `number` | Target distance between linked nodes, in pixels. |
+| `strength` | `number` | How rigidly the distance is enforced. `1` is stiff, values near `0` are loose and stretchy. |
+
+Drag the sliders and watch the springs react:
+
+<LinkForceDemo />
+
+## Choosing values
+
+- **`length`** — match it to your node size: large card-style nodes need `150+` to avoid
+  overlap; small dots are fine at `30–80`.
+- **`strength`** — `1` keeps distances uniform and grid-like; `0.1–0.5` lets the layout breathe
+  and is usually more organic. Combine a loose link force with a stronger
+  [`chargeForce`](./chargeForce) for classic network layouts.
+
+:::info Omitted = no spring
+Like all forces, `linkForce` is only added when you pass the prop. Without it, links are still
+*drawn*, but they exert no pull on the layout.
+:::

@@ -1,9 +1,63 @@
 ---
 title: gravityForce
 sidebar_label: gravityForce
-hide_title: true
+description: Pull the whole graph toward a center point so it stays in view.
 ---
 
-import GravityForceComponent from "@site/src/components/GravityForce";
+import { GravityForceDemo } from "@site/src/components/demos/PropDemos";
 
-<GravityForceComponent />
+# `gravityForce`
+
+Pulls every node toward a fixed point — the graph's "center of gravity". Without it, a strong
+[`chargeForce`](./chargeForce) will slowly push disconnected clusters out of view.
+
+```tsx
+<Graph
+  graph={data}
+  gravityForce={{ strength: 0.06, center_x: 250, center_y: 250 }}
+/>
+```
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `strength` | `number` | How firmly nodes are pulled to the center. Useful range: `0.01 – 0.3`. |
+| `center_x` | `number` | X coordinate of the center, in graph pixels (origin = top-left of the container). |
+| `center_y` | `number` | Y coordinate of the center. |
+
+Crank the strength up and watch the cluster snap to the middle:
+
+<GravityForceDemo />
+
+## Centering on your container
+
+The coordinates are in the graph's own pixel space, so to center the pull in your container,
+use half its rendered size:
+
+```tsx
+const ref = useRef<HTMLDivElement>(null);
+const [center, setCenter] = useState({ x: 250, y: 250 });
+
+useEffect(() => {
+  const el = ref.current;
+  if (!el) return;
+  const update = () =>
+    setCenter({ x: el.clientWidth / 2, y: el.clientHeight / 2 });
+  update();
+  const observer = new ResizeObserver(update);
+  observer.observe(el);
+  return () => observer.disconnect();
+}, []);
+
+<div ref={ref} style={{ height: 500, display: "flex" }}>
+  <Graph
+    graph={data}
+    gravityForce={{ strength: 0.06, center_x: center.x, center_y: center.y }}
+  />
+</div>;
+```
+
+:::tip
+Keep `strength` low (`≈ 0.05`) for most layouts — it should gently anchor the graph, not crush
+it into a ball. If nodes overlap when you raise gravity, add a stronger repelling
+[`chargeForce`](./chargeForce) to balance it.
+:::

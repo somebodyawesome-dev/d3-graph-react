@@ -1,9 +1,90 @@
 ---
 title: onSimulationCreated
 sidebar_label: onSimulationCreated
-hide_title: true
+description: Access the raw d3-force simulation for full control — custom forces, listeners, reheating.
 ---
 
-import OnSimulationCreatedComponent from "@site/src/components/OnSimulationCreated";
+import { SimulationDemo } from "@site/src/components/demos/PropDemos";
 
-<OnSimulationCreatedComponent />
+# `onSimulationCreated`
+
+Your escape hatch to raw D3. The callback fires **once per simulation instance**, right after
+it's created, and hands you the underlying
+[d3-force `Simulation`](https://d3js.org/d3-force/simulation) — everything the props don't
+cover is yours to configure directly.
+
+```tsx
+import type { Simulation } from "d3-force";
+
+<Graph
+  graph={data}
+  onSimulationCreated={(simulation) => {
+    console.log("alpha:", simulation.alpha());
+  }}
+/>;
+```
+
+Live — the buttons below call methods on the captured simulation, and the bar tracks its alpha
+in real time:
+
+<SimulationDemo />
+
+## Recipes
+
+### Keep a handle for later
+
+```tsx
+const simulationRef = useRef<Simulation<any, any> | null>(null);
+
+<Graph
+  graph={data}
+  onSimulationCreated={(simulation) => {
+    simulationRef.current = simulation;
+  }}
+/>;
+
+// anywhere else in your component:
+const reheat = () => simulationRef.current?.alpha(1).restart();
+const freeze = () => simulationRef.current?.stop();
+```
+
+### Add forces the props don't expose
+
+The props cover link, charge and gravity forces — for anything else, register it yourself.
+A collision force that prevents node overlap:
+
+```tsx
+import { forceCollide } from "d3-force";
+
+<Graph
+  graph={data}
+  onSimulationCreated={(simulation) => {
+    simulation.force("collide", forceCollide(60));
+  }}
+/>;
+```
+
+### Listen to simulation events
+
+Use **namespaced listeners** (`tick.myFeature`) so you don't overwrite the library's own
+internal `tick` handler:
+
+```tsx
+<Graph
+  graph={data}
+  onSimulationCreated={(simulation) => {
+    simulation.on("end.analytics", () => console.log("layout settled"));
+    simulation.on("tick.minimap", () => updateMinimap(simulation.nodes()));
+  }}
+/>;
+```
+
+:::warning Don't replace the tick handler
+`simulation.on("tick", ...)` (without a namespace) would detach the handler that re-renders the
+React nodes, freezing the graph. Always use a namespace suffix as shown above.
+:::
+
+:::info Lifecycle
+The simulation is re-created whenever the [`graph`](./graph) data changes, and the callback
+fires again with the new instance — so refs you store stay fresh automatically.
+:::

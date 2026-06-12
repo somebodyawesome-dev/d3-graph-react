@@ -1,4 +1,4 @@
-type RelationshipType = "Dated" | "Married" | "Engaged" | "Hookup/Fling" | "Other";
+type RelationshipType = "Dated" | "Married" | "Engaged" | "Hookup/Fling";
 
 interface Character {
   id: number;
@@ -7,11 +7,18 @@ interface Character {
 }
 
 interface Relationship {
-  source: number;
-  target: number;
+  source: number; // character id (mapped to array index in the Playground)
+  target: number; // character id
   type: RelationshipType;
   color: string;
 }
+
+const COLORS: Record<RelationshipType, string> = {
+  Married: "#e91e63",
+  Engaged: "#2196f3",
+  Dated: "#4caf50",
+  "Hookup/Fling": "#ff9800",
+};
 
 const characters: Character[] = [
   { id: 0, name: "Jim Halpert", image: "jim-halpert.jpg" },
@@ -35,59 +42,63 @@ const characters: Character[] = [
   { id: 18, name: "Gil", image: "Gil.jpg" },
   { id: 19, name: "Meredith Palmer", image: "Meredith-Palmer.jpg" },
   { id: 20, name: "Creed Bratton", image: "Creed-Bratton.jpg" },
-  { id: 21, name: "The Senator", image: "The-Senator.jpg" },
-  { id: 22, name: "Robert California", image: "Robert-California.jpg" },
-  { id: 23, name: "Nellie Bertram", image: "Nellie-Bertram.jpg" },
-  { id: 24, name: "Jessica", image: "Jessica.jpg" },
-  { id: 25, name: "Roy Anderson", image: "Roy-Anderson.jpg" },
-  { id: 26, name: "Karen Filippelli", image: "Karen-Filippelli.jpg" },
-  { id: 27, name: "Danny Cordray", image: "Danny-Cordray.jpg" },
-  { id: 28, name: "Charles Miner", image: "Charles-Miner.jpg" },
-  { id: 29, name: "Donna Newton", image: "Donna-Newton.jpg" },
-  { id: 30, name: "Jo Bennett", image: "Jo-Bennett.jpg" },
-  { id: 31, name: "Deangelo Vickers", image: "Deangelo-Vickers.jpg" },
-  { id: 32, name: "Isabel", image: "Isabel.jpg" },
-  { id: 33, name: "Val Johnson", image: "Val-Johnson.jpg" },
-  { id: 34, name: "Pete Miller", image: "Pete-Miller.jpg" },
-  { id: 35, name: "Clark Green", image: "Clark-Green.jpg" },
-  { id: 36, name: "Esther", image: "Esther.jpg" },
-  { id: 37, name: "Gabe Lewis", image: "Gabe-Lewis.jpg" },
-  { id: 38, name: "Cathy Simms", image: "Cathy-Simms.jpg" },
-  { id: 39, name: "Sasha Flenderson", image: "Sasha-Flenderson.jpg" },
+  { id: 21, name: "Senator Robert Lipton", image: "The-Senator.jpg" },
+  { id: 22, name: "Jessica", image: "Jessica.jpg" },
+  { id: 23, name: "Roy Anderson", image: "Roy-Anderson.jpg" },
+  { id: 24, name: "Karen Filippelli", image: "Karen-Filippelli.jpg" },
+  { id: 25, name: "Danny Cordray", image: "Danny-Cordray.jpg" },
+  { id: 26, name: "Donna Newton", image: "Donna-Newton.jpg" },
+  { id: 27, name: "Isabel Poreba", image: "Isabel.jpg" },
+  { id: 28, name: "Val Johnson", image: "Val-Johnson.jpg" },
+  { id: 29, name: "Pete Miller", image: "Pete-Miller.jpg" },
+  { id: 30, name: "Esther Bruegger", image: "Esther.jpg" },
+  { id: 31, name: "Gabe Lewis", image: "Gabe-Lewis.jpg" },
 ];
 
+const rel = (
+  source: number,
+  target: number,
+  type: RelationshipType
+): Relationship => ({ source, target, type, color: COLORS[type] });
+
 const relationships: Relationship[] = [
-  { source: 0, target: 1, type: "Married", color: "#e91e63" },
-  { source: 2, target: 3, type: "Engaged", color: "#2196f3" },
-  { source: 4, target: 5, type: "Married", color: "#e91e63" },
-  { source: 6, target: 7, type: "Dated", color: "#4caf50" },
-  { source: 8, target: 3, type: "Engaged", color: "#2196f3" },
-  { source: 4, target: 9, type: "Dated", color: "#4caf50" },
-  { source: 4, target: 10, type: "Dated", color: "#4caf50" },
-  { source: 7, target: 11, type: "Hookup/Fling", color: "#ff9800" },
-  { source: 12, target: 6, type: "Dated", color: "#4caf50" },
-  { source: 13, target: 14, type: "Married", color: "#e91e63" },
-  { source: 15, target: 16, type: "Married", color: "#e91e63" },
-  { source: 17, target: 18, type: "Dated", color: "#4caf50" },
-  { source: 19, target: 20, type: "Hookup/Fling", color: "#ff9800" },
-  { source: 3, target: 21, type: "Married", color: "#e91e63" },
-  { source: 0, target: 26, type: "Dated", color: "#4caf50" },
-  { source: 0, target: 27, type: "Dated", color: "#4caf50" },
-  { source: 0, target: 38, type: "Hookup/Fling", color: "#ff9800" },
-  { source: 2, target: 36, type: "Dated", color: "#4caf50" },
-  { source: 2, target: 32, type: "Dated", color: "#4caf50" },
-  { source: 7, target: 28, type: "Dated", color: "#4caf50" },
-  { source: 4, target: 29, type: "Hookup/Fling", color: "#ff9800" },
-  { source: 4, target: 30, type: "Dated", color: "#4caf50" },
-  { source: 4, target: 31, type: "Hookup/Fling", color: "#ff9800" },
-  { source: 6, target: 33, type: "Dated", color: "#4caf50" },
-  { source: 11, target: 34, type: "Dated", color: "#4caf50" },
-  { source: 11, target: 35, type: "Hookup/Fling", color: "#ff9800" },
-  { source: 37, target: 6, type: "Dated", color: "#4caf50" },
-  { source: 25, target: 1, type: "Engaged", color: "#2196f3" },       
-  { source: 23, target: 2, type: "Hookup/Fling", color: "#ff9800" }, 
-  { source: 24, target: 8, type: "Dated", color: "#4caf50" },         
-  { source: 39, target: 22, type: "Other", color: "#4caf50" },           
+  // Jim & Pam's circle
+  rel(0, 1, "Married"), // Jim — Pam
+  rel(0, 24, "Dated"), // Jim — Karen (S3)
+  rel(23, 1, "Engaged"), // Roy — Pam (S1–S3)
+  rel(1, 25, "Dated"), // Pam — Danny Cordray (a couple of dates, revealed in "The Sting")
+
+  // Dwight & Angela's circle
+  rel(2, 3, "Married"), // Dwight — Angela (married in the finale)
+  rel(2, 27, "Hookup/Fling"), // Dwight — Isabel (Niagara wedding)
+  rel(2, 30, "Dated"), // Dwight — Esther (S9)
+  rel(8, 3, "Engaged"), // Andy — Angela (S5)
+  rel(3, 21, "Married"), // Angela — the Senator
+  rel(17, 21, "Hookup/Fling"), // Oscar — the Senator (the S9 affair)
+
+  // Michael's love life
+  rel(4, 5, "Married"), // Michael — Holly
+  rel(4, 9, "Dated"), // Michael — Jan
+  rel(4, 10, "Dated"), // Michael — Helene, Pam's mom ("Double Date")
+  rel(4, 26, "Hookup/Fling"), // Michael — Donna (she was married)
+
+  // The annex and the warehouse
+  rel(6, 7, "Dated"), // Kelly — Ryan
+  rel(7, 11, "Hookup/Fling"), // Ryan — Erin (brief, secret)
+  rel(12, 6, "Dated"), // Darryl — Kelly
+  rel(12, 28, "Dated"), // Darryl — Val (S8)
+
+  // Erin's suitors
+  rel(8, 11, "Dated"), // Andy — Erin (S7–S9)
+  rel(31, 11, "Dated"), // Gabe — Erin (S7)
+  rel(11, 29, "Dated"), // Erin — Pete (S9)
+
+  // The rest of the office
+  rel(13, 14, "Hookup/Fling"), // Stanley — Cynthia (his affair; his wife was Teri)
+  rel(15, 16, "Married"), // Phyllis — Bob Vance, Vance Refrigeration
+  rel(17, 18, "Dated"), // Oscar — Gil
+  rel(19, 20, "Hookup/Fling"), // Meredith — Creed
+  rel(8, 22, "Dated"), // Andy — Jessica (S8)
 ];
 
 export { characters, relationships };

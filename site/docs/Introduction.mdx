@@ -1,10 +1,77 @@
 ---
 title: Introduction
 sidebar_label: Introduction
-hide_title: true
+description: d3-graph-react is a fully typed React component for interactive, force-directed graphs powered by d3-force.
 ---
 
-import IntroductionComponent from "@site/src/components/Introduction";
+import { BasicGraphDemo } from "@site/src/components/demos/PropDemos";
 
-<IntroductionComponent />
+# Introduction
 
+**d3-graph-react** lets you build **interactive, force-directed graphs** in React — without
+writing any D3 code. You describe your network as plain data, render nodes and links as ordinary
+React components, and the library drives the physics with
+[d3-force](https://d3js.org/d3-force) under the hood.
+
+Here is one, live — grab a node and throw it around:
+
+<BasicGraphDemo />
+
+## Why this library?
+
+D3 and React both want to own the DOM, and mixing them by hand usually ends in `ref` gymnastics
+and stale state. d3-graph-react draws a clean line between the two:
+
+- **D3 computes** — the force simulation calculates node positions and handles drag physics and
+  zoom/pan transforms.
+- **React renders** — every node and link is a React component you control. Use your design
+  system, Tailwind classes, images — anything that renders.
+
+The result is a graph that feels native to your React codebase: declarative props in, JSX out.
+
+## Highlights
+
+- ⚛️ **React-first rendering** — nodes and links are your own components, not SVG strings.
+- 🧲 **Tunable physics** — configure [link](./Props/linkForce), [charge](./Props/chargeForce)
+  and [gravity](./Props/gravityForce) forces with simple props.
+- 🖱️ **Interactions built in** — drag-and-drop nodes, plus [zoom & pan](./Props/zoomScale) with
+  configurable limits.
+- 🌊 **Ambient motion** — keep the graph [gently floating](./Props/ambientAlphaTarget) instead
+  of freezing in place.
+- 🛠️ **Full escape hatch** — grab the raw d3 simulation with
+  [`onSimulationCreated`](./Props/onSimulationCreated).
+- 🦺 **TypeScript-first** — generic over your node and link types, so your custom data is fully
+  typed inside `NodeComponent` and `LinkComponent`.
+
+## A taste of the API
+
+```tsx
+import { Graph } from "d3-graph-react";
+
+const data = {
+  nodes: [{ id: 1, name: "Sun" }, { id: 2, name: "Earth" }, { id: 3, name: "Moon" }],
+  links: [
+    { source: 0, target: 1 }, // indices into the nodes array
+    { source: 1, target: 2 },
+  ],
+};
+
+export const SolarSystem = () => (
+  <div style={{ height: 500, display: "flex" }}>
+    <Graph
+      graph={data}
+      chargeForce={{ strength: -200 }}
+      linkForce={{ length: 120, strength: 1 }}
+      gravityForce={{ strength: 0.05, center_x: 250, center_y: 250 }}
+      NodeComponent={({ node }) => <span className="badge">{node.name}</span>}
+    />
+  </div>
+);
+```
+
+## Where to next?
+
+- [**Installation**](./Installation) — add the package to your project.
+- [**Quick Start**](./QuickStart) — build your first graph in five minutes.
+- [**API Reference**](./Props/overview) — every prop, with live examples.
+- [**Playground**](./Playground) — explore real datasets and tweak the physics live.

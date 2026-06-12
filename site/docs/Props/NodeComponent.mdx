@@ -1,9 +1,71 @@
 ---
 title: NodeComponent
 sidebar_label: NodeComponent
-hide_title: true
+description: Render every node in the graph as your own React component.
 ---
 
-import NodeComponent from "@site/src/components/Node";
+import { NodeComponentDemo } from "@site/src/components/demos/PropDemos";
 
-<NodeComponent />
+# `NodeComponent`
+
+Renders each node as **your own React component**. It receives the node's data — including any
+custom fields you added — and can return any JSX: HTML, images, styled components, Tailwind
+classes, anything.
+
+```ts
+type NodeComponentType<N> = React.FC<{ node: N }>;
+```
+
+```tsx
+type Person = { id: number; name: string; role: string; color: string };
+
+<Graph<Person>
+  graph={data}
+  NodeComponent={({ node }) => (
+    <div className="person-card" style={{ borderColor: node.color }}>
+      <strong>{node.name}</strong>
+      <small>{node.role}</small>
+    </div>
+  )}
+/>;
+```
+
+Live — each card below is a plain `<div>` with Tailwind classes:
+
+<NodeComponentDemo />
+
+## How it works
+
+Each node is rendered inside an SVG `<foreignObject>` positioned by the simulation. That means:
+
+- **Regular HTML and CSS work** — flexbox, borders, shadows, even other React components.
+- **The node sizes itself** — width and height come from your component's natural size.
+- **Dragging is automatic** — no event handlers needed (disable it with
+  [`isNodeDraggable`](./overview#isnodedraggable)).
+
+If you don't pass a `NodeComponent`, a simple built-in white box is used.
+
+## Typed custom data
+
+`Graph` is generic, so your node type flows into the component with full autocomplete:
+
+```tsx
+import { Graph, type Node } from "d3-graph-react";
+
+type Character = Node & { name: string; avatar: string };
+
+const CharacterNode: React.FC<{ node: Character }> = ({ node }) => (
+  <figure className="character">
+    <img src={node.avatar} alt={node.name} width={48} height={48} />
+    <figcaption>{node.name}</figcaption>
+  </figure>
+);
+
+<Graph<Character> graph={data} NodeComponent={CharacterNode} />;
+```
+
+:::tip Keep nodes lightweight
+`NodeComponent` renders once per node and re-renders on every simulation tick while the graph
+is moving. Avoid heavy computation inside it — memoize expensive work with `useMemo`, or
+pre-compute it in your data.
+:::

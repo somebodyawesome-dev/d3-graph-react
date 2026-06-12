@@ -1,0 +1,80 @@
+---
+title: API Reference
+sidebar_label: Overview
+description: Every prop accepted by the Graph component, at a glance.
+---
+
+# API Reference
+
+The library exports a single component, `Graph`, plus the TypeScript types you need to work
+with it:
+
+```tsx
+import {
+  Graph,
+  type GraphType,          // all props of <Graph />
+  type Node,               // minimal node shape: { id: string | number }
+  type Link,               // minimal link shape: { source: number; target: number }
+  type NodeType,           // a node inside the simulation (x, y, vx, vy, ...)
+  type NodeComponentType,  // signature for custom node renderers
+  type LinkComponentType,  // signature for custom link renderers
+} from "d3-graph-react";
+```
+
+`Graph` is generic over your node and link types: `Graph<MyNode, MyLink>` gives you full
+type-safety in `NodeComponent` and `LinkComponent`.
+
+## Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| [`graph`](./graph) | `{ nodes: N[], links: L[] }` | **required** | The data to visualize. Links reference nodes **by array index**. |
+| [`NodeComponent`](./NodeComponent) | `FC<{ node: N }>` | built-in box | Renders each node as your own React component. |
+| [`LinkComponent`](./LinkComponent) | `FC<{ link, sourceNode, targetNode, … }>` | built-in line | Renders each link, with access to both endpoint positions and sizes. |
+| [`zoomScale`](./zoomScale) | `[number, number]` | `[0.5, 8]` | Minimum and maximum zoom factor. |
+| [`onZoom`](./zoomScale#listening-to-zoom-events) | `(event: D3ZoomEvent) => void` | — | Called on every zoom or pan gesture. |
+| [`linkForce`](./linkForce) | `{ strength, length }` | off | Pulls linked nodes toward a target distance. |
+| [`gravityForce`](./gravityForce) | `{ strength, center_x, center_y }` | off | Pulls the whole graph toward a center point. |
+| [`chargeForce`](./chargeForce) | `{ strength }` | off | Makes nodes repel (negative) or attract (positive) each other. |
+| [`isNodeDraggable`](#isnodedraggable) | `boolean` | `true` | Enables drag-and-drop on nodes. |
+| [`ambientAlphaTarget`](./ambientAlphaTarget) | `number` | `0` | Keeps the simulation gently running instead of settling. |
+| [`onSimulationCreated`](./onSimulationCreated) | `(simulation) => void` | — | Hands you the raw d3-force simulation instance. |
+| [`containerId`](#styling-hooks) | `string` | — | `id` applied to the container `<div>`. |
+| [`containerClassName`](#styling-hooks) | `string` | `"w-full flex"` | Class applied to the container `<div>`. |
+| [`svgClassName`](#styling-hooks) | `string` | `"w-full min-h-full"` | Class applied to the `<svg>` element. |
+
+:::info Forces are opt-in
+A force is only registered with the simulation when its prop is provided. Pass nothing and the
+nodes won't spread out — for a sensible layout, start with `chargeForce`, `linkForce` and
+`gravityForce` together (see the [Quick Start](../QuickStart#2-render-the-graph)).
+:::
+
+## `isNodeDraggable`
+
+Dragging is enabled by default. While a node is dragged it is pinned to the cursor; on release
+it rejoins the simulation, which briefly reheats so the layout can adapt. Set
+`isNodeDraggable={false}` for a read-only graph:
+
+```tsx
+<Graph graph={data} isNodeDraggable={false} />
+```
+
+## Styling hooks
+
+The component renders a `<div>` container wrapping an `<svg>`. Use these props to size and
+style them from your own CSS:
+
+```tsx
+<Graph
+  graph={data}
+  containerId="org-chart"
+  containerClassName="my-graph-container"
+  svgClassName="my-graph-canvas"
+/>
+```
+
+:::tip Give the container a height
+The default classes make the graph fill its parent. If nothing shows up, the most common cause
+is a parent element with zero height — wrap the graph in a container with an explicit height
+(e.g. `style={{ height: 500, display: "flex" }}`).
+:::

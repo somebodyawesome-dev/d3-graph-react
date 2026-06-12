@@ -1,9 +1,47 @@
 ---
 title: ambientAlphaTarget
 sidebar_label: ambientAlphaTarget
-hide_title: true
+description: Keep the graph gently floating forever instead of settling to a standstill.
 ---
 
-import AmbientAlphaTargetComponent from "@site/src/components/AmbientAlphaTarget";
+import { AmbientAlphaTargetDemo } from "@site/src/components/demos/PropDemos";
 
-<AmbientAlphaTargetComponent />
+# `ambientAlphaTarget`
+
+By default a d3-force simulation "cools down": its internal energy (**alpha**) decays toward
+zero and the graph comes to rest. `ambientAlphaTarget` sets a floor under that decay, so the
+simulation keeps gently running forever — nodes drift and sway as if floating in water.
+
+```tsx
+<Graph
+  graph={data}
+  ambientAlphaTarget={0.05}
+/>
+```
+
+| Value | Behavior |
+| ----- | -------- |
+| `0` (default) | Standard d3 behavior — the graph animates into place, then settles. |
+| `0.02 – 0.05` | Subtle, organic drift. The sweet spot for most uses. |
+| `0.05 – 0.1` | Lively, noticeable motion. |
+| `> 0.1` | Chaotic — the layout never really stabilizes. |
+
+Slide it to `0` and watch the graph freeze; nudge it up and it comes back to life:
+
+<AmbientAlphaTargetDemo />
+
+## When to use it
+
+- **Landing pages and dashboards** — a slowly breathing graph reads as "live data" and draws
+  the eye (the hero on this site uses `0.04`).
+- **Frequently-changing graphs** — a warm simulation absorbs node additions and removals more
+  gracefully than a cold one.
+
+:::warning Mind the CPU
+A non-zero value means the simulation ticks — and your nodes re-render — on every animation
+frame, indefinitely. Keep [`NodeComponent`](./NodeComponent) cheap, and prefer `0` for very
+large graphs or battery-sensitive contexts.
+:::
+
+The prop is fully reactive: change it at runtime (e.g. pause motion when a tab is hidden) and
+the simulation adjusts immediately.

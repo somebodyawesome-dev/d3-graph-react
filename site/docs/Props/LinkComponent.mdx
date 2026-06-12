@@ -1,9 +1,71 @@
 ---
 title: LinkComponent
 sidebar_label: LinkComponent
-hide_title: true
+description: Render every link in the graph with custom SVG — colors, dashes, arrows, curves.
 ---
 
-import LinkComponent from "@site/src/components/Link";
+import { LinkComponentDemo } from "@site/src/components/demos/PropDemos";
 
-<LinkComponent />
+# `LinkComponent`
+
+Renders each connection between two nodes. You receive the link's data plus both endpoints'
+**live simulation positions** and **DOM refs**, and return SVG — lines, paths, curves, arrows,
+labels, whatever your graph needs.
+
+```ts
+type LinkComponentType<L> = React.FC<{
+  link: L;                                   // your link data, custom fields included
+  sourceNode: NodeType;                      // simulation node: { x, y, vx, vy, ... }
+  sourceNodeRef: RefObject<HTMLDivElement>;  // rendered source node element
+  targetNode: NodeType;
+  targetNodeRef: RefObject<HTMLDivElement>;
+}>;
+```
+
+Live — links styled by their `kind` field:
+
+<LinkComponentDemo />
+
+## A complete example
+
+`sourceNode.x / .y` is the **top-left corner** of the node. To draw from center to center,
+measure the rendered node via the refs:
+
+```tsx
+const WireLink = ({ link, sourceNode, sourceNodeRef, targetNode, targetNodeRef }) => {
+  // refs may be empty on the very first frame
+  if (!sourceNode || !targetNode || !sourceNodeRef?.current || !targetNodeRef?.current)
+    return null;
+
+  const { offsetWidth: sw, offsetHeight: sh } = sourceNodeRef.current;
+  const { offsetWidth: tw, offsetHeight: th } = targetNodeRef.current;
+
+  return (
+    <line
+      x1={sourceNode.x + sw / 2}
+      y1={sourceNode.y + sh / 2}
+      x2={targetNode.x + tw / 2}
+      y2={targetNode.y + th / 2}
+      stroke={link.kind === "async" ? "#fbbf24" : "#818cf8"}
+      strokeWidth={2}
+      strokeDasharray={link.kind === "async" ? "6,4" : undefined}
+    />
+  );
+};
+
+<Graph graph={data} LinkComponent={WireLink} />;
+```
+
+:::warning Always guard against missing refs
+On the first render the node elements haven't been measured yet, so start your component with
+the null-check shown above. Skipping it is the most common cause of crashes in custom links.
+:::
+
+## Ideas
+
+- **Curved edges** — return a `<path>` with a quadratic Bézier (`d={\`M ... Q ... \`}`).
+- **Arrowheads** — add a `<marker>` via `markerEnd`, or draw a small triangle at the target end.
+- **Labels** — render a `<text>` element at the midpoint between the two nodes.
+- **Weighted links** — map `link.weight` to `strokeWidth` or opacity.
+
+If you don't pass a `LinkComponent`, a simple built-in line is drawn between node centers.

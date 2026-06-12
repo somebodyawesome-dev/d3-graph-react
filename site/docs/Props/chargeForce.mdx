@@ -1,9 +1,42 @@
 ---
-title: ChargeForce
-sidebar_label: ChargeForce
-hide_title: true
+title: chargeForce
+sidebar_label: chargeForce
+description: Make nodes repel or attract each other, like electric charges.
 ---
 
-import ChargeForceComponent from "@theme/ChargeForce";
+import { ChargeForceDemo } from "@site/src/components/demos/PropDemos";
 
-<ChargeForceComponent />
+# `chargeForce`
+
+Makes every node push or pull on every other node, like electric charges:
+
+- **Negative strength** → nodes **repel** each other (the usual choice — spreads the graph out).
+- **Positive strength** → nodes **attract** each other (clumps the graph together).
+
+```tsx
+<Graph
+  graph={data}
+  chargeForce={{ strength: -250 }}
+/>
+```
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `strength` | `number` | Repulsion (negative) or attraction (positive) applied between all node pairs. |
+
+Sweep the slider from strongly negative to positive and watch the graph breathe:
+
+<ChargeForceDemo />
+
+## Choosing values
+
+- **`-30` to `-100`** — subtle spacing for small, dot-sized nodes.
+- **`-150` to `-400`** — roomy layouts for card- or avatar-style nodes.
+- **Positive values** — rarely what you want alone, but small positive charges can create tight
+  clusters when combined with a [`linkForce`](./linkForce).
+
+:::tip Balance the forces
+Charge pushes everything apart forever — pair it with [`gravityForce`](./gravityForce) to keep
+the graph on screen, and [`linkForce`](./linkForce) to keep neighbors together. The interplay
+of the three is what gives force-directed layouts their shape.
+:::

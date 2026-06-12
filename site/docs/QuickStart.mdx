@@ -1,0 +1,155 @@
+---
+title: Quick Start
+sidebar_label: Quick Start
+description: Build your first interactive force-directed graph with d3-graph-react in five minutes.
+---
+
+import { NodeComponentDemo } from "@site/src/components/demos/PropDemos";
+
+# Quick Start
+
+In five minutes you'll have an interactive, draggable graph rendered with your own React
+components. Make sure you've [installed the package](./Installation) first.
+
+## 1. Describe your network
+
+A graph is just two arrays: `nodes` and `links`. Nodes need an `id`, and can carry any extra
+data you like. Links connect nodes **by their position in the `nodes` array**:
+
+```tsx title="data.ts"
+export const team = {
+  nodes: [
+    { id: 1, name: "Ava", role: "Lead" },
+    { id: 2, name: "Liam", role: "Frontend" },
+    { id: 3, name: "Mia", role: "Design" },
+    { id: 4, name: "Noah", role: "Backend" },
+  ],
+  links: [
+    { source: 0, target: 1 }, // Ava — Liam
+    { source: 0, target: 2 }, // Ava — Mia
+    { source: 0, target: 3 }, // Ava — Noah
+  ],
+};
+```
+
+:::warning Links use array indices, not ids
+`source` and `target` refer to **indices in the `nodes` array** (`0` = first node), not to the
+node's `id` field. If your data is id-based, map it to indices first — see
+[the `graph` prop](./Props/graph#linking-by-id) for a one-liner that does it.
+:::
+
+## 2. Render the graph
+
+Drop the `Graph` component inside a container **that has a height** — the graph fills its
+parent, so a zero-height parent means an invisible graph:
+
+```tsx title="TeamGraph.tsx"
+import { Graph } from "d3-graph-react";
+import { team } from "./data";
+
+export const TeamGraph = () => (
+  <div style={{ height: 500, display: "flex" }}>
+    <Graph
+      graph={team}
+      chargeForce={{ strength: -250 }}
+      linkForce={{ length: 130, strength: 1 }}
+      gravityForce={{ strength: 0.06, center_x: 250, center_y: 250 }}
+    />
+  </div>
+);
+```
+
+:::tip Always configure some forces
+A force is only added to the simulation when you pass its prop. With no forces at all, nodes
+have nothing pulling them apart and pile up in a corner. The trio above — negative charge to
+spread nodes, link force to hold neighbors together, gravity to keep everything centered — is a
+great starting point for almost any graph.
+:::
+
+## 3. Make the nodes yours
+
+By default nodes render as plain white boxes. Pass a `NodeComponent` to render anything you
+want — it's a regular React component receiving the node's data, fully typed:
+
+```tsx title="TeamGraph.tsx"
+export const TeamGraph = () => (
+  <div style={{ height: 500, display: "flex" }}>
+    <Graph
+      graph={team}
+      chargeForce={{ strength: -250 }}
+      linkForce={{ length: 130, strength: 1 }}
+      gravityForce={{ strength: 0.06, center_x: 250, center_y: 250 }}
+      NodeComponent={({ node }) => (
+        <div className="member-card">
+          <strong>{node.name}</strong>
+          <small>{node.role}</small>
+        </div>
+      )}
+    />
+  </div>
+);
+```
+
+Here's that pattern live — drag the cards around:
+
+<NodeComponentDemo />
+
+## 4. Tune the feel
+
+Every aspect of the physics is a prop. Some favorites to play with:
+
+| What you want                  | Prop to reach for                                          |
+| ------------------------------ | ---------------------------------------------------------- |
+| More space between nodes       | [`chargeForce`](./Props/chargeForce) — more negative       |
+| Shorter/longer connections     | [`linkForce`](./Props/linkForce) — `length`                |
+| Keep the graph centered        | [`gravityForce`](./Props/gravityForce)                     |
+| A graph that never stops moving| [`ambientAlphaTarget`](./Props/ambientAlphaTarget)         |
+| Limit how far users can zoom   | [`zoomScale`](./Props/zoomScale)                           |
+| Custom link styling            | [`LinkComponent`](./Props/LinkComponent)                   |
+
+Or skip the reading and head straight to the [Playground](./Playground) to tweak everything
+with sliders on real datasets.
+
+## Full example
+
+```tsx title="TeamGraph.tsx" showLineNumbers
+import { Graph } from "d3-graph-react";
+
+const team = {
+  nodes: [
+    { id: 1, name: "Ava", role: "Lead" },
+    { id: 2, name: "Liam", role: "Frontend" },
+    { id: 3, name: "Mia", role: "Design" },
+    { id: 4, name: "Noah", role: "Backend" },
+  ],
+  links: [
+    { source: 0, target: 1 },
+    { source: 0, target: 2 },
+    { source: 0, target: 3 },
+  ],
+};
+
+export const TeamGraph = () => (
+  <div style={{ height: 500, display: "flex" }}>
+    <Graph
+      graph={team}
+      chargeForce={{ strength: -250 }}
+      linkForce={{ length: 130, strength: 1 }}
+      gravityForce={{ strength: 0.06, center_x: 250, center_y: 250 }}
+      ambientAlphaTarget={0.03}
+      NodeComponent={({ node }) => (
+        <div className="member-card">
+          <strong>{node.name}</strong>
+          <small>{node.role}</small>
+        </div>
+      )}
+    />
+  </div>
+);
+```
+
+## Next steps
+
+- Browse the [**API Reference**](./Props/overview) — every prop with a live, editable example.
+- Style your connections with [**LinkComponent**](./Props/LinkComponent).
+- Need raw d3 power? Meet [**onSimulationCreated**](./Props/onSimulationCreated).

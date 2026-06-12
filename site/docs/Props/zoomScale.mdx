@@ -1,9 +1,54 @@
 ---
-title: zoomScale
+title: zoomScale & onZoom
 sidebar_label: zoomScale
-hide_title: true
+description: Configure zoom and pan limits, and listen to zoom events.
 ---
 
-import ZoomScaleComponent from "@site/src/components/ZoomScale";
+import { ZoomScaleDemo } from "@site/src/components/demos/PropDemos";
 
-<ZoomScaleComponent />
+# `zoomScale` & `onZoom`
+
+Zoom and pan are built in: scroll or pinch to zoom, drag the background to pan. `zoomScale`
+sets the allowed zoom range as `[min, max]`:
+
+```tsx
+<Graph
+  graph={data}
+  zoomScale={[0.5, 8]} // can zoom out to 50%, in to 800%
+/>
+```
+
+The default is `[0.5, 8]`.
+
+Try it — scroll inside the frame, then tighten the sliders and notice the limits kick in:
+
+<ZoomScaleDemo />
+
+## Listening to zoom events
+
+Pass `onZoom` to be notified on every zoom or pan gesture. It receives the d3 zoom event, whose
+`transform` carries the current scale (`k`) and translation (`x`, `y`):
+
+```tsx
+import type { D3ZoomEvent } from "d3-zoom";
+
+<Graph
+  graph={data}
+  zoomScale={[0.5, 8]}
+  onZoom={(event: D3ZoomEvent<SVGElement, unknown>) => {
+    console.log("zoom level:", event.transform.k);
+    console.log("pan offset:", event.transform.x, event.transform.y);
+  }}
+/>;
+```
+
+Typical uses:
+
+- Show a zoom-percentage indicator in your UI.
+- Swap node detail levels (hide labels when zoomed far out).
+- Persist the viewport so users return to where they left off.
+
+:::tip
+`onZoom` fires on every animation frame of a gesture — debounce or throttle anything expensive
+you do inside it.
+:::

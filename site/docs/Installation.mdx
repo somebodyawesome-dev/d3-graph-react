@@ -1,9 +1,67 @@
 ---
 title: Installation
 sidebar_label: Installation
-hide_title: true
+description: Install d3-graph-react with npm, yarn, pnpm or bun, and check the requirements.
 ---
 
-import InstallationComponent from "@theme/Installation";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
-<InstallationComponent />
+# Installation
+
+Install the package with your favorite package manager:
+
+<Tabs groupId="package-manager">
+  <TabItem value="npm" label="npm" default>
+
+```bash
+npm install d3-graph-react
+```
+
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+
+```bash
+yarn add d3-graph-react
+```
+
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add d3-graph-react
+```
+
+  </TabItem>
+  <TabItem value="bun" label="bun">
+
+```bash
+bun add d3-graph-react
+```
+
+  </TabItem>
+</Tabs>
+
+All D3 dependencies (`d3-force`, `d3-zoom`, `d3-drag`, `d3-selection`) are bundled — you don't
+need to install D3 yourself.
+
+## Requirements
+
+| Requirement | Version |
+| ----------- | ------- |
+| `react`     | ^18.2   |
+| `react-dom` | ^18.2   |
+
+TypeScript is fully supported out of the box — type definitions ship with the package, no
+`@types/*` install needed.
+
+## Verify the setup
+
+Import the component anywhere in your app:
+
+```tsx
+import { Graph } from "d3-graph-react";
+```
+
+If that compiles, you're ready to build your first graph — head over to the
+[Quick Start](./QuickStart).

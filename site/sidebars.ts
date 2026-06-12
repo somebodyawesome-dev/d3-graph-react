@@ -1,31 +1,39 @@
-import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     {
-      type: 'doc',
-      id: 'Introduction', 
-      label: 'Introduction',
-    },
-    {
-      type: 'doc',
-      id: 'Installation', 
-      label: 'Installation',
-    },
-    {
-      type: 'category',
-      label: 'Props',
+      type: "category",
+      label: "Getting Started",
+      collapsible: false,
       items: [
-        { type: 'doc', id: 'Props/graph', label: 'Graph' },
-        { type: 'doc', id: 'Props/NodeComponent', label: 'NodeComponent' },
-        { type: 'doc', id: 'Props/LinkComponent', label: 'LinkComponent' },
-        { type: 'doc', id: 'Props/zoomScale', label: 'ZoomScale' },
-        { type: 'doc', id: 'Props/linkForce', label: 'LinkForce' },
-        { type: 'doc', id: 'Props/gravityForce', label: 'GravityForce' },
-        { type: 'doc', id: 'Props/chargeForce', label: 'ChargeForce' },
-        { type: 'doc', id: 'Props/ambientAlphaTarget', label: 'AmbientAlphaTarget' },
-        { type: 'doc', id: 'Props/onSimulationCreated', label: 'OnSimulationCreated' },
+        { type: "doc", id: "Introduction", label: "Introduction" },
+        { type: "doc", id: "Installation", label: "Installation" },
+        { type: "doc", id: "QuickStart", label: "Quick Start" },
       ],
+    },
+    {
+      type: "category",
+      label: "API Reference",
+      collapsible: false,
+      items: [
+        { type: "doc", id: "Props/overview", label: "Overview" },
+        { type: "doc", id: "Props/graph", label: "graph" },
+        { type: "doc", id: "Props/NodeComponent", label: "NodeComponent" },
+        { type: "doc", id: "Props/LinkComponent", label: "LinkComponent" },
+        { type: "doc", id: "Props/zoomScale", label: "zoomScale" },
+        { type: "doc", id: "Props/linkForce", label: "linkForce" },
+        { type: "doc", id: "Props/gravityForce", label: "gravityForce" },
+        { type: "doc", id: "Props/chargeForce", label: "chargeForce" },
+        { type: "doc", id: "Props/ambientAlphaTarget", label: "ambientAlphaTarget" },
+        { type: "doc", id: "Props/onSimulationCreated", label: "onSimulationCreated" },
+      ],
+    },
+    {
+      type: "category",
+      label: "Explore",
+      collapsible: false,
+      items: [{ type: "doc", id: "Playground", label: "Playground" }],
     },
   ],
 };

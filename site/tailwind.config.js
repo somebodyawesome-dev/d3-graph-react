@@ -2,9 +2,7 @@
 module.exports = {
     content: [
       './src/**/*.{js,jsx,ts,tsx}',
-      './docs/**/*.mdx',
-      './docusaurus.config.js',
-      './sidebars.js',
+      './docs/**/*.{md,mdx}',
     ],
     theme: {
       extend: {
