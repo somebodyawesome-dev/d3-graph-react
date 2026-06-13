@@ -122,9 +122,7 @@ body {
 }
 
 .navbar__logo {
-  background: #ffffff;
-  border-radius: 6px;
-  padding: 2px;
+  height: 2.1rem;
 }
 
 .navbar__link {

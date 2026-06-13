@@ -9,7 +9,7 @@ const config: Config = {
   baseUrl: "/d3-graph-react/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-  favicon: "img/nodes.png",
+  favicon: "img/favicon.png",
   organizationName: "somebodyawesome-dev",
   projectName: "d3-graph-react",
   trailingSlash: false,
@@ -41,6 +41,7 @@ const config: Config = {
   },
 
   themeConfig: {
+    image: "img/social-card.png",
     metadata: [
       {
         name: "keywords",
@@ -60,7 +61,7 @@ const config: Config = {
       hideOnScroll: false,
       logo: {
         alt: "d3-graph-react logo",
-        src: "img/nodes.png",
+        src: "img/logo.svg",
       },
       items: [
         {
