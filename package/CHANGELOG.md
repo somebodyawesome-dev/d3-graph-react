@@ -1,5 +1,11 @@
 # d3-graph-react
 
+## 1.3.1
+
+### Patch Changes
+
+- Docs only: refreshed the README with the new project logo and status badges. No code or API changes — the published library is identical to 1.3.0.
+
 ## 1.3.0
 
 ### Minor Changes
